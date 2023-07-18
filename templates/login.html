@@ -1,73 +1,74 @@
 {% extends 'includes/base.html' %}%
 
 {% block body %}
-  <body>
-    <!-- Content -->
+<body>
+<!-- Content -->
 
-    <div class="container-xxl">
-      <div class="authentication-wrapper authentication-basic container-p-y">
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
-          <!-- Register -->
-          <div class="card">
-            <div class="card-body">
-              <!-- Logo -->
-              <div class="app-brand justify-content-center">
-                <a href="index.html" class="app-brand-link gap-2">
+            <!-- Register -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="index.html" class="app-brand-link gap-2">
                   <span class="app-brand-logo demo">
-                    <img src="{{url_for('static', filename='assets/logo.png')}}" alt="" width="190" height="120" draggable="false">
+                    <img src="{{url_for('static', filename='assets/logo.png')}}" alt="" width="190" height="120"
+                         draggable="false">
                   </span>
-                </a>
-              </div>
-              <!-- /Logo -->
-              <p class="mb-4">Please sign-in to your <b>HRIS</b> account</p>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <p class="mb-4">Please sign-in to your <b>HRIS</b> account</p>
 
-              <form id="formAuthentication" class="mb-3" action="/" method="POST">
-                <div class="mb-3">
-                  <label for="username" class="form-label">Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    placeholder="Enter your username"
-                    autofocus
-                  />
-                </div>
-                <div class="mb-3 form-password-toggle">
-                  <label for="password" class="form-label">Password</label>
-                  <div class="input-group input-group-merge">
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password"
-                    />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="remember-me" />
-                    <label class="form-check-label" for="remember-me"> Remember Me </label>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-                </div>
-              </form>
+                    <form id="formAuthentication" class="mb-3" action="/" method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="username"
+                                    name="username"
+                                    placeholder="Enter your username"
+                                    autofocus
+                            />
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input
+                                        type="password"
+                                        id="password"
+                                        class="form-control"
+                                        name="password"
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                        aria-describedby="password"
+                                />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember-me"/>
+                                <label class="form-check-label" for="remember-me"> Remember Me </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                        </div>
+                    </form>
 
-              <p class="text-center">
-                <span>Have a problem?</span><br>
-                <span>Contact MIS 267 or Email us <i>mis@teamglac.com or mis.apps@teamglac.com</i></span>
-              </p>
+                    <p class="text-center">
+                        <span>Have a problem?</span><br>
+                        <span>Contact MIS 267 or Email us <i>mis@teamglac.com or mis.apps@teamglac.com</i></span>
+                    </p>
+                </div>
             </div>
-          </div>
-          <!-- /Register -->
+            <!-- /Register -->
         </div>
-      </div>
     </div>
+</div>
 
-    {% endblock %}
+{% endblock %}
 
