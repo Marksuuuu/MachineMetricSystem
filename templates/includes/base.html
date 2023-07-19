@@ -11,6 +11,12 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename = 'assets/icon_main.png') }}" />
+    <style>
+      /* Adjust the z-index of the SweetAlert container to bring it to the front */
+      .swal2-container {
+        z-index: 9999; /* Set a high value to ensure it appears in front of other elements */
+      }
+    </style>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,7 +41,8 @@
     <!-- Page CSS -->
     <!-- Page -->
     <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/vendor/css/pages/page-auth.css') }}" />
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.18/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.18/dist/sweetalert2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Helpers -->
     <script src="{{ url_for('static', filename = 'assets/vendor/js/helpers.js') }}"></script>
 
@@ -67,6 +74,7 @@
     <!-- Main JS -->
     <script src="{{ url_for('static', filename = 'assets/js/main.js') }}"></script>
     <script src="{{ url_for('static', filename = 'jquery/main.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'jquery/data.js') }}"></script>
     <script src="{{ url_for('static', filename = 'jquery/login.js') }}"></script>
     <script src="{{ url_for('static', filename = 'assets/socketio/main.js') }}"></script>
     <script src="{{ url_for('static', filename = 'assets/socketio/socket.io-1.2.0.js') }}"></script>
@@ -76,6 +84,7 @@
     <script src="{{ url_for('static', filename = 'assets/js/jquery.dataTables.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/sweetalert2/sweetalert2.js') }}" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.18/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Add this line to your HTML file -->
     <!-- Page JS -->

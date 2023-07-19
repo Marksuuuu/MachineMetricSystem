@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 import psycopg2
 import psycopg2.extras
 import requests
+from psycopg2 import Error
 from flask_socketio import SocketIO, emit
 from datetime import datetime, time, date
 import re
@@ -78,10 +79,10 @@ def showAll():
                 FROM
                     connected_clients_data_tbl
                 WHERE
-                    (port_name, id) IN (
-                        SELECT port_name, MAX(id)
+                    (ip_address, id) IN (
+                        SELECT ip_address, MAX(id)
                         FROM connected_clients_data_tbl
-                        GROUP BY port_name
+                        GROUP BY ip_address
                     )
                 AND ip_address = %s
             """, (port,))
@@ -130,6 +131,67 @@ def saveController():
     return msg
 
 
+@app.route('/data-gather-data')
+def data_gather_view():
+    try:
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                id,
+                area, 
+                class, 
+                emp_no, 
+                machine_id, 
+                machine_name, 
+                mo, 
+                running_qty, 
+                status, 
+                sub_opt_name, 
+                photo, 
+                start_date, 
+                uid, 
+                machine_status, 
+                from_client, 
+                from_client_ip, 
+                from_client_sid
+            FROM 
+                public.machine_data_tbl;
+        """)
+        rows = cursor.fetchall()
+        controllers = []
+        for row in rows:
+            controllers.append({
+                'id': row[0],
+                'area': row[1],
+                'class': row[2],
+                'emp_no': row[3],
+                'machine_id': row[4],
+                'machine_name': row[5],
+                'mo': row[6],
+                'running_qty': row[7],
+                'status': row[8],
+                'sub_opt_name': row[9],
+                'photo': row[10],
+                'start_date': row[11],
+                'uid': row[12],
+                'machine_status': row[13],
+                'from_client': row[14],
+                'from_client_ip': row[15],
+                'from_client_sid': row[16],
+            })
+        conn.commit()  # Commit the transaction before closing the cursor
+        cursor.close()
+        conn.close()
+        return jsonify({'data': controllers})
+    except Exception as e:
+        conn.rollback()  # Rollback the transaction in case of an error
+        cursor.close()
+        conn.close()
+        print("Error executing query:", e)
+        return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
+
+
 @app.route('/controller')
 def controller():
     try:
@@ -165,8 +227,52 @@ def controller():
         conn.close()
         print("Error executing query:", e)
         return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
+    
+@app.route('/getMachinesNamesApi')
+def getMachinesNamesApi():
+    url = 'http://cmms.teamglac.com/apimachine2.php'
+    response = requests.get(url)
+    data = json.loads(response.text)['data']
+    
+    classes = set()  # Create a set to store unique values
+    
+    for rec in data:
+        classes.add(rec['CLASS']) 
+    unique_classes = list(classes) 
+    return jsonify(unique_classes)
 
 
+@app.route('/updateClientData', methods=['POST'])
+def updateClientData():
+    id = request.form['id']
+    print(f"==>> id: {id}")
+    selectedArea = request.form['selectedArea']
+    selectedMachineName = request.form['selectedMachineName']
+    with psycopg2.connect(**db_config) as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                        UPDATE 
+                            public.connected_clients_data_tbl
+	                    SET 
+                            machine_setup=%s, area=%s
+	                    WHERE id = %s;""", (selectedMachineName, selectedArea, id,))
+            msg = "UPDATE SUCCESS"
+    return msg
+
+@app.route('/deleteController', methods=['POST'])
+def deleteController():
+    id = request.form['id']
+    print(f"==>> id: {id}")
+    with psycopg2.connect(**db_config) as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                        DELETE 
+                        FROM 
+                            public.controller_tbl
+	                    WHERE 
+                            id = %s""", (id))
+            msg = "DELETE SUCCESS"
+    return msg
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -216,34 +322,6 @@ def login():
 
 ##TRIGGER
 
-def create_trigger_function():
-    with psycopg2.connect(**db_config) as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                CREATE OR REPLACE FUNCTION update_connected_clients_data()
-                RETURNS TRIGGER AS $$
-                BEGIN
-                    IF NEW.session_id IS NOT NULL THEN
-                        INSERT INTO public.connected_clients_data_tbl (ip_address, session_id, port_name, controller_name, machine_setup, time_added, start, stop, status)
-                        VALUES (NEW.ip_address, NEW.session_id, NEW.port_name, NEW.controller_name, NEW.machine_setup, NEW.time_added, NEW.start, NEW.stop, NEW.status);
-                    END IF;
-                    RETURN NEW;
-                END;
-                $$ LANGUAGE plpgsql;
-            """)
-            conn.commit()
-
-def create_trigger():
-    with psycopg2.connect(**db_config) as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                CREATE TRIGGER after_update_connected_clients_data
-                AFTER UPDATE ON public.connected_clients_data_tbl
-                FOR EACH ROW
-                EXECUTE FUNCTION update_connected_clients_data();
-            """)
-            conn.commit()
-
 
 
 ##SOCKETIO-RESPONSE-FUNCTION
@@ -251,58 +329,89 @@ def create_trigger():
 def saveDatabaseClient(data):
     print(f"==>> data: {data}")
     ipAddress = request.remote_addr
+    print(f"==>> ipAddress: {ipAddress}")
     dateAdded = str(datetime.now())
-    machineName = data['machine_name']
+    machineName = data.get('machine_name', '')
     machineNameNoPy = re.sub('.py', '', machineName)
     session = request.sid
-
-    with psycopg2.connect(**db_config) as conn:
-        with conn.cursor() as cur:
-            status = 'CONNECTED'
-            cur.execute(
-                    "INSERT INTO public.connected_clients_data_tbl(ip_address, session, port_name, time_added, start, status) VALUES (%s, %s, %s, %s, %s, %s)",
-                    (ipAddress, session , machineNameNoPy, dateAdded, dateAdded, status)
-            )
-            msg = "INSERT SUCCESS"
-            conn.commit()  # commit the transaction
-    return msg 
+    print(f"==>> session: {session}")
+    msg = ""
+    try:
+        with psycopg2.connect(**db_config) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT COUNT(*) FROM public.connected_clients_data_tbl WHERE ip_address = %s",
+                    (ipAddress,)
+                )
+                count = cur.fetchone()[0]   
+                print(f"==>> count: {count}")
+                if count > 0:  # Record exists, perform an update
+                    status = 'CONNECTED'
+                    cur.execute(
+                        """
+                        UPDATE public.connected_clients_data_tbl
+                        SET session=%s, time_added=%s, status=%s
+                        WHERE ip_address=%s;
+                        """,
+                        (session, dateAdded, status, ipAddress,)
+                    )
+                    msg = "UPDATE SUCCESS"
+                    conn.commit()
+                    print('go here')
+                else:  # Record doesn't exist, perform an insert
+                    status = 'CONNECTED'
+                    cur.execute(
+                        "INSERT INTO public.connected_clients_data_tbl(ip_address, session, port_name, time_added, status) VALUES (%s, %s, %s, %s, %s)",
+                        (ipAddress, session, machineNameNoPy, dateAdded, status)
+                    )
+                    msg = "INSERT SUCCESS"
+                    conn.commit()  # commit the transaction
+    except Error as e:
+        msg = f"ERROR: {e}"
+    
+    return msg
     
 def saveDatabaseDisconnect(data):
-    print(f"==>> data: {data}")
     ipAddress = request.remote_addr
     dateAdded = str(datetime.now())
     machineName = data['machine_name']
     machineNameNoPy = re.sub('.py', '', machineName)
     session = request.sid
-
-    create_trigger_function()  # Create trigger function if not already created
-    create_trigger()  # Create trigger if not already created
-
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM public.connected_clients_data_tbl WHERE session = %s", (session,))
-            record_count = cur.fetchone()[0]
-            if record_count > 0:
+            cur.execute(
+                "SELECT COUNT(*) FROM public.connected_clients_data_tbl WHERE ip_address = %s",
+                (ipAddress,)
+            )
+            count = cur.fetchone()[0]
+            if count > 0:  # Record exists, perform an update
                 cur.execute(
-                    "UPDATE public.connected_clients_data_tbl SET stop=%s WHERE session =%s",
-                    (ipAddress, dateAdded, session)
+                    """
+                    UPDATE public.connected_clients_data_tbl
+	                SET  session= %s, time_added= %s, status= %s
+	                WHERE ip_address= %s ;
+                    """,
+                    (session, dateAdded, session, ipAddress)
                 )
                 msg = "UPDATE SUCCESS"
-            else:
-                status = 'DISCONNECTED'
+            else:  # Record doesn't exist, perform an insert
                 cur.execute(
-                    "INSERT INTO public.connected_clients_data_tbl(ip_address, session_id, port_name, time_added, stop, status) VALUES (%s, %s, %s, %s, %s, %s)",
-                    (ipAddress, session ,dateAdded ,machineNameNoPy, dateAdded, status)
+                    """
+                    INSERT INTO public.controller_tbl (ip_address, time_added, session)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (ipAddress, dateAdded, session)
                 )
                 msg = "INSERT SUCCESS"
+
             conn.commit()  # commit the transaction
+
     return msg
 
 def handleDisconnect():
     print('disconnect')
     
 def saveDatabaseController(data):
-    print(f"==>> data: {data}")
     ipAddress = request.remote_addr
     dateAdded = str(datetime.now())
     machineName = data['machine_name']
@@ -338,6 +447,8 @@ def saveDatabaseController(data):
             conn.commit()  # commit the transaction
 
     return msg
+
+
     
 
 ##SOCKET-IO 
@@ -345,6 +456,7 @@ def saveDatabaseController(data):
 @socketio.on('disconnect')
 def disconnect():
     handleDisconnect()
+    
     
 @socketio.on('disconnect_data')
 def handle_disconnect(data):
@@ -356,11 +468,61 @@ def handle_disconnect(data):
 def handle_controller(data):
     saveDatabaseController(data)
 
+
 @socketio.on('client')
 def handle_client(data):
     saveDatabaseClient(data)
     
     
+@socketio.on('sendDataToClient')
+def handle_custom_event(data):
+    sid = data['sessionID']
+    machine_name = data['selectedMachineName']
+    socketio.emit('my_message', {'machine_name': machine_name}, to=sid)
+    
+@socketio.on('data')
+def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
+    print(f"==>> data: {data}")
+    try:
+        with psycopg2.connect(**db_config) as conn:
+            cur = conn.cursor()
+            client_ip = request.remote_addr
+            inner_data = next(iter(data.values()))
+
+            ipAddress = request.remote_addr
+            fromClient = remove_py
+            session = request.sid
+            EMP_NO = inner_data['EMP_NO']
+            AREA_NAME = inner_data['AREA_NAME']
+            CLASS = inner_data['CLASS']
+            MACHINE_ID = inner_data['MACHINE_ID']
+            MACHINE_NAME = inner_data['MACHINE_NAME']
+            MO = inner_data['MO']
+            RUNNING_QTY = inner_data['RUNNING_QTY']
+            STATUS = inner_data['STATUS']
+            SUB_OPT_NAME = inner_data['SUB_OPT_NAME']
+
+            hris = f'http://hris.teamglac.com/api/users/emp-num?empno={EMP_NO}'
+            response = requests.get(hris)
+            hris_data = json.loads(response.text)['result']
+
+            if hris_data == False:
+                photo = "../static/assets/images/faces/pngegg.png"
+            else:
+                photo_url = hris_data['photo_url']
+                photo = f"http://hris.teamglac.com/{photo_url}"
+
+            start_time = str(get_start_date)
+            cur.execute(
+                'INSERT INTO machine_data_tbl (area, class, emp_no, machine_id, machine_name, mo, running_qty, status, sub_opt_name, photo, start_date, uid, machine_status, from_client, from_client_ip, from_client_sid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                (AREA_NAME, CLASS, EMP_NO, MACHINE_ID, MACHINE_NAME, MO, RUNNING_QTY, STATUS, SUB_OPT_NAME, photo, start_time, uID, stat_var, ipAddress, fromClient, session)
+            )
+            conn.commit()
+            return jsonify("Data inserted successfully into the database")
+    except psycopg2.Error as e:
+        error_message = "Error inserting/updating data in the database: " + str(e)
+        conn.rollback()
+        return jsonify(error_message)
     
     
 ##ROUTES
@@ -380,6 +542,11 @@ def controller_info():
 def controller_data():
     return render_template('controller-data.html')
 
+@app.route('/data-gather')
+@login_required
+def data_gather():
+    return render_template('data-gather.html')
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -392,5 +559,5 @@ def index():
 
 if __name__ == '__main__':
     # app.run(host='10.0.2.150', port=8001, debug=True)
-    socketio.run(app, host='10.0.2.150', port=8001, debug=True)
+    socketio.run(app, host='10.0.2.150', port=9090, debug=True)
  

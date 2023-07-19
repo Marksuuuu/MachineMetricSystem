@@ -1,0 +1,182 @@
+{% extends "includes/base.html" %}
+
+{% block body %}
+<body>
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <!-- Menu -->
+
+        {% include "includes/sidenav.html" %}
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+            <!-- Navbar -->
+
+            {% include "includes/nav.html" %}
+
+            <!-- / Navbar -->
+
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+
+                <div class="container-xxl flex-grow-1 container-p-y">
+
+
+                    <h4 class="fw-bold py-3 mb-4">
+                        <span class="text-muted fw-light">Controller Status </span>
+                    </h4>
+
+                    <!-- Ajax Sourced Server-side -->
+                    <div class="card">
+                        <div style="card-header">
+                            <label for="toggle-column" class="form-header">Toggle column:</label>
+                            <select id="toggle-column" class="form-select">
+                                <option value="-1" data-column="-1">All</option>
+                                <option value="0" data-column="0">ID</option>
+                                <option value="1" data-column="1">Area</option>
+                                <option value="2" data-column="2">Class</option>
+                                <option value="3" data-column="3">Employee No</option>
+                                <option value="4" data-column="4">Machine ID</option>
+                                <option value="5" data-column="5">Machine Name</option>
+                                <option value="6" data-column="6">MO</option>
+                                <option value="7" data-column="7">Running Qty</option>
+                                <option value="8" data-column="8">Status</option>
+                                <option value="9" data-column="9">Sub Option Name</option>
+                                <option value="10" data-column="10">Photo</option>
+                                <option value="11" data-column="11">Start Date</option>
+                                <option value="12" data-column="12">UID</option>
+                                <option value="13" data-column="13">Machine Status</option>
+                                <option value="14" data-column="14">From Client</option>
+                                <option value="15" data-column="15">From Client IP</option>
+                                <option value="16" data-column="16">From Client SID</option>
+                                <option value="17" data-column="17">Actions</option>
+                            </select>
+                        </div>
+                        <div class="card-datatable text-nowrap">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered dataTable no-footer"
+                                    id="dataTbl" aria-describedby="dataTbl_info"
+                                    style="width: 1390px;">
+                                 <thead>
+                                 <tr>
+                                     <th class="sorting sorting_asc" tabindex="0"
+                                         aria-controls="dataTbl" rowspan="1" colspan="1"
+                                         aria-label=""
+                                         aria-sort="ascending" style="width: 199.889px">ID
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 233.889px;">AREA
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 281.889px;">CLASS
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">EMP NUMBER
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">MACHINE ID
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">MACHINE NAME
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">MO
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">RUNNNING QUANTITY
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">STATUS
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">SUB OPT
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">PHOTO
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 143.889px;">START DATE
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">UID
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">MACHINE STATUS
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">CLIENT
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">CLIENT IP
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">CLIENT SID
+                                     </th>
+                                     <th class="sorting" tabindex="0" aria-controls="dataTbl"
+                                         rowspan="1" colspan="1"
+                                         aria-label=""
+                                         style="width: 126px;">ACTIONS
+                                     </th>
+                                 </tr>
+                                 </thead>
+                                 <tbody id="dataTblTbody"></tbody>
+                             </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+                 
+                <!-- / Content -->
+                
+            </div>
+        </div>
+
+        
+    </div>
+
+    
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+</div>
+<!-- / Layout wrapper -->
+
+{% endblock %}

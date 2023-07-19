@@ -1,5 +1,5 @@
 var table
-
+var controllerModal
 $('document').ready(function () {
     dataTableController()
 
@@ -9,6 +9,8 @@ $('document').ready(function () {
     })
 
 })
+
+
 function addController(controllerId, controllerName) {
 
     var formData = new FormData();
@@ -39,11 +41,19 @@ function dataTableController() {
                 render: function (row) {
                     var buttonHtml = '';
                     if (row.controller_name === null) {
-                        buttonHtml += ' <button type="button" class="btn btn-outline-primary bx bxs-save swal-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>';
+                        buttonHtml += ' <div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
+                            ' <button type="button" class="btn btn-outline-success bx bxs-pencil swal-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>' +
+                            '<button type="button" class="btn btn-outline-info bx bx-list-ol show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>' +
+                            '<button type="button" class="btn btn-outline-danger bx bx-trash delete-btn" data-id="' + row.id + '"></button>' +
+                            '</div>';
+                    } else {
+                        buttonHtml += ' <div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
+                            ' <button type="button" class="btn btn-outline-primary bx bxs-edit swal-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '" show-controller="' + row.controller_name + '"></button>' +
+                            '<button type="button" class="btn btn-outline-info bx bx-list-ol show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '" show-controller="' + row.controller_name + '"></button>' +
+                            '<button type="button" class="btn btn-outline-danger bx bx-trash delete-btn" data-id="' + row.id + '"></button>' +
+                            '</div>';
                     }
-                    buttonHtml += ' <button type="button" class="btn btn-outline-danger bx bx-trash delete-btn" data-id="' + row.id + '"></button>' +
-                        '<button type="button" class="btn btn-outline-info bx bx-list-ol show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>'+
-                        ' <button type="button" class="btn btn-outline-primary bx bxs-edit swal-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>';
+
 
                     return buttonHtml;
                 }
@@ -51,14 +61,39 @@ function dataTableController() {
         ],
     });
 
+    table.on('click', '.delete-btn', function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+                var id = $(this).attr('data-id')
+                var formData = new FormData();
+                formData.append('id', id)
+                makeAjaxRequest('/deleteController', formData)
+            }
+        })
 
+    })
 
     table.on('click', '.swal-btn', function () {
         var controllerId = $(this).data('id');
+        var machineSetupCell = $(this).closest('tr').find('td:eq(2)').text();
         var ip = $(this).data('ip');
         Swal.fire({
             title: 'Enter Controller Name',
             input: 'text',
+            inputPlaceholder: machineSetupCell,
             inputLabel: 'Your Input:',
             showCancelButton: true,
             confirmButtonText: 'Submit',
@@ -76,16 +111,12 @@ function dataTableController() {
     });
 
     table.on('click', '.show-btn', function () {
-        var modalDataId = $(this).attr('data-id')
-        $('#exLargeModal').attr('modal-id', $(this).attr('data-ip'))
+        var controllerIp = $(this).attr('data-ip')
+        var showController = $(this).attr('show-controller')
+        $("#exampleModalLabel4").text(showController);
         $('#exLargeModal').modal('toggle')
-        var controllerIp = $('#exLargeModal').attr('modal-id')
 
         var formData = new FormData();
-
-        data = JSON.stringify({
-            'controllerIp': controllerIp
-        })
         formData.append('controllerIp', controllerIp)
         makeRequest('/showAll', formData)
     })
@@ -143,18 +174,99 @@ function successResponse(response) {
             '<td>' + row.TIME_ADDED + '</td>' +
             '<td><span class="badge bg-primary">' + row.STATUS + '</span></td>' +
             '<td>' + row.AREA + '</td>' +
-            '<td class="text-nowrap"><button type="button" class="btn btn-outline-primary bx bx-list-ol" data-id="'+ row.ID +'"></button>' +
-            '<button type="button" class="btn btn-outline-danger bx bx-trash" data-id="'+ row.ID +'"></button></td>' +
+            '<td><div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
+            '<button type="button" class="btn btn-outline-primary bx bx-list-ol" data-id="' + row.ID + '"></button>' +
+            '<button type="button" class="btn btn-outline-success bx bx-edit edit-btn" data-id="' + row.ID + '"></button>' +
+            '<button type="button" class="btn btn-outline-danger bx bx-trash" data-id="' + row.ID + '"></button>' +
+            '</div>' +
+            '</td>' +
             '</tr>';
         $('#dataTableVarTbody').append(newRow);
     });
 
-    $('#dataTableVar').DataTable({
+    controllerModal = $('#dataTableVar').DataTable({
         processing: true,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
         order: [[3, 'desc']]
     });
+
+    $('.edit-btn').click(function () {
+        var rowId = $(this).data('id'); // Get the ID of the row associated with the clicked button
+        var machineSetupCell = $(this).closest('tr').find('td:eq(4)');
+        var machineSetupBtn = $(this).closest('tr').find('td:eq(8)');
+        var area = $(this).closest('tr').find('td:eq(7)');
+
+        var areaField = $('<select class="form-control" id="area_var"></select>');
+        area.empty().append(areaField);
+
+        var areaOptions = ['Die Prep', 'Die Attach', 'Wirebond', 'Mold', 'EOL1', 'EOL2'];
+        areaOptions.forEach(function (option) {
+            var optionElement = $('<option></option>').text(option);
+            areaField.append(optionElement);
+        });
+        areaField.val(area.text());
+        area.empty().append(areaField);
+
+        var selectMachineName = $('<select class="form-control" id="machine_name_var"></select>');
+        machineSetupCell.empty().append(selectMachineName);
+        getMachinesNamesApi();
+
+        var btnSave = $('<button type="button" class="btn btn-outline-warning bx bx-save text-nowrap btn-save"></button>');
+        machineSetupBtn.empty().append(btnSave);
+
+        $(document).on('click', '.btn-save', function () {
+            var id = $(this).closest('tr').find('td:eq(0)').text();
+            var sessionID = $(this).closest('tr').find('td:eq(2)').text();
+            var selectedArea = $('#area_var').val();
+            var selectedMachineName = $('#machine_name_var').val();
+
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('selectedArea', selectedArea);
+            formData.append('selectedMachineName', selectedMachineName);
+
+            makeAjaxRequest('/updateClientData', formData);
+            passDataToClient(sessionID, selectedMachineName);
+        });
+
+    });
+
+    function passDataToClient(sessionID, selectedMachineName) {
+        var socket = io.connect();
+
+        console.log("Session ID:", sessionID);
+        socket.emit('sendDataToClient', { 'sessionID': sessionID, 'selectedMachineName': selectedMachineName });
+
+        socket.on('response', function (data) {
+            console.log('Received server response:', data);
+        });
+    }
+
+
+    function getMachinesNamesApi() {
+        $.ajax({
+            url: "/getMachinesNamesApi",
+            type: "GET",
+            success: function (response) {
+                var machineNames = response;
+                var select = $("#machine_name_var");
+                select.select2({
+                    dropdownParent: $('#exLargeModal')
+                })
+
+                $.each(machineNames, function (index, name) {
+                    select.append($('<option></option>').val(name).html(name));
+                });
+            },
+            error: function (error) {
+                console.log("Error in API request:", error);
+            }
+        });
+    }
+
 }
+
+
 
 function makeAjaxRequest(url, data) {
     $.ajax({
@@ -167,6 +279,7 @@ function makeAjaxRequest(url, data) {
         },
         success: function (response) {
             table.ajax.reload();
+            // controllerModal.ajax.reload();
             responseResponse(response)
 
         },
@@ -192,7 +305,14 @@ function makeAjaxRequest(url, data) {
 }
 
 function responseResponse(response) {
-
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Success',
+        text: response,
+        showConfirmButton: true,
+    })
+    $('#exLargeModal').modal('hide')
 }
 
 
