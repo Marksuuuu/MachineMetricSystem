@@ -8,6 +8,33 @@ $('document').ready(function () {
 
     })
 
+    let currentPath = $(location).attr('href');
+    if (currentPath.endsWith('/')) {
+        console.log('no comment')
+    } else {
+        idle({
+            onIdle: function () {
+                Swal.fire({
+                    title: 'You have been log out!',
+                    text: "You have been idle for a long time..",
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/logout'
+                    }
+                })
+
+            },
+            idle: 3000,
+            // idle: 1800000,
+            keepTracking: true,
+            startAtIdle: true
+        }).start();
+    }
 })
 
 
@@ -59,6 +86,7 @@ function dataTableController() {
                 }
             }
         ],
+        order: [[3, 'desc']]
     });
 
     table.on('click', '.delete-btn', function () {
@@ -97,6 +125,7 @@ function dataTableController() {
             inputLabel: 'Your Input:',
             showCancelButton: true,
             confirmButtonText: 'Submit',
+            inputValue: machineSetupCell,
             showLoaderOnConfirm: true,
             preConfirm: function (value) {
                 return value;
@@ -167,7 +196,7 @@ function successResponse(response) {
     dataResult.forEach(function (row) {
         var newRow = '<tr>' +
             '<td>' + row.ID + '</td>' +
-            '<td>' + row.IP + '</td>' + // Replaced row.PORT with row.IP here
+            '<td>' + row.IP + '</td>' +
             '<td>' + row.SESSION + '</td>' +
             '<td>' + row.PORT + '</td>' +
             '<td>' + row.MACHINE_SETUP + '</td>' +
@@ -191,7 +220,7 @@ function successResponse(response) {
     });
 
     $('.edit-btn').click(function () {
-        var rowId = $(this).data('id'); // Get the ID of the row associated with the clicked button
+        var rowId = $(this).data('id');
         var machineSetupCell = $(this).closest('tr').find('td:eq(4)');
         var machineSetupBtn = $(this).closest('tr').find('td:eq(8)');
         var area = $(this).closest('tr').find('td:eq(7)');
@@ -266,8 +295,6 @@ function successResponse(response) {
 
 }
 
-
-
 function makeAjaxRequest(url, data) {
     $.ajax({
         url: url,
@@ -279,7 +306,8 @@ function makeAjaxRequest(url, data) {
         },
         success: function (response) {
             table.ajax.reload();
-            // controllerModal.ajax.reload();
+            $('#DataTables_Table_0').DataTable().ajax.reload();
+            // controllerModal.ajax.reload();dataTableVar
             responseResponse(response)
 
         },
@@ -307,8 +335,8 @@ function makeAjaxRequest(url, data) {
 function responseResponse(response) {
     Swal.fire({
         position: 'center',
-        icon: 'success',
-        title: 'Success',
+        icon: 'info',
+        title: 'Notice',
         text: response,
         showConfirmButton: true,
     })

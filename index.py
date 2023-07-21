@@ -110,26 +110,26 @@ def showAll():
 def saveController():
     name = request.form['name']
     id_str = request.form['id']
-    print(f"==>> id_str: {id_str}")
-    
-    # Check if the id_str is a valid integer
     try:
         id = int(id_str)
     except ValueError:
         return "Invalid ID. Please provide a valid integer for the ID."
-
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
-            cur.execute("""
-                        UPDATE 
-                            public.controller_tbl
-                        SET 
-                            controller_name = %s
-                        WHERE id = %s""", (name, id))
-            msg = "UPDATE SUCCESS"
-            conn.commit()  # commit the transaction
+            cur.execute("SELECT COUNT(*) FROM public.controller_tbl WHERE controller_name = %s", (name,))
+            count = cur.fetchone()[0]
+            if count == 0:
+                cur.execute("""
+                            UPDATE 
+                                public.controller_tbl
+                            SET 
+                                controller_name = %s
+                            WHERE id = %s""", (name, id))
+                msg = "UPDATE SUCCESS"
+                conn.commit()
+            else:
+                msg = "Record with the provided already exists. No update was performed."
     return msg
-
 
 @app.route('/data-gather-data')
 def data_gather_view():
@@ -449,8 +449,6 @@ def saveDatabaseController(data):
     return msg
 
 
-    
-
 ##SOCKET-IO 
 
 @socketio.on('disconnect')
@@ -506,7 +504,7 @@ def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
             response = requests.get(hris)
             hris_data = json.loads(response.text)['result']
 
-            if hris_data == False:
+            if hris_data == False or hris_data is None:
                 photo = "../static/assets/images/faces/pngegg.png"
             else:
                 photo_url = hris_data['photo_url']
@@ -514,7 +512,7 @@ def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
 
             start_time = str(get_start_date)
             cur.execute(
-                'INSERT INTO machine_data_tbl (area, class, emp_no, machine_id, machine_name, mo, running_qty, status, sub_opt_name, photo, start_date, uid, machine_status, from_client, from_client_ip, from_client_sid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                'INSERT INTO machine_data_tbl (area, class, emp_no, machine_id, machine_name, mo, running_qty, status, sub_opt_name, photo, start_date, uid, machine_status, from_client, from_client_ip, from_client_sid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
                 (AREA_NAME, CLASS, EMP_NO, MACHINE_ID, MACHINE_NAME, MO, RUNNING_QTY, STATUS, SUB_OPT_NAME, photo, start_time, uID, stat_var, ipAddress, fromClient, session)
             )
             conn.commit()

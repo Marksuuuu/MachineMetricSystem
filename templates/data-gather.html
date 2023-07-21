@@ -26,13 +26,14 @@
 
 
                     <h4 class="fw-bold py-3 mb-4">
-                        <span class="text-muted fw-light">Controller Status </span>
+                        <span class="text-muted fw-light">Data</span>
                     </h4>
 
                     <!-- Ajax Sourced Server-side -->
                     <div class="card">
                         <div style="card-header">
-                            <label for="toggle-column" class="form-header">Toggle column:</label>
+                            <div class='mb-3 col-lg-6 col-xl-2 col-12 mb-0'>
+                                <label for="toggle-column" class="form-header">Toggle column:</label>
                             <select id="toggle-column" class="form-select">
                                 <option value="-1" data-column="-1">All</option>
                                 <option value="0" data-column="0">ID</option>
@@ -54,11 +55,12 @@
                                 <option value="16" data-column="16">From Client SID</option>
                                 <option value="17" data-column="17">Actions</option>
                             </select>
+                            </div>
                         </div>
                         <div class="card-datatable text-nowrap">
-                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                            <div id="DataTables_Table_0_wrapper" class="">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered dataTable no-footer"
+                                    <table class="table table-bordered no-footer"
                                     id="dataTbl" aria-describedby="dataTbl_info"
                                     style="width: 1390px;">
                                  <thead>

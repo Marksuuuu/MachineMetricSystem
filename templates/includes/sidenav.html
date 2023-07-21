@@ -1,7 +1,7 @@
 {% block sidenav %}
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="index.html" class="app-brand-link">
+        <a class="app-brand-link">
         <span class="app-brand-logo demo">
           <img src="{{url_for('static', filename='assets/logo.png')}}" alt="" height="50" width="80" draggable="false"
                style=" pointer-events: none;">
@@ -17,8 +17,8 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item active open">
-            <a href="{{url_for('dashboard')}}" class="menu-link">
+        <li class="menu-item active open" draggable="false">
+            <a href="{{url_for('dashboard')}}" class="menu-link" draggable="false">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
