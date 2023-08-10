@@ -29,14 +29,13 @@ $('document').ready(function () {
                 })
 
             },
-            idle: 3000,
-            // idle: 1800000,
+            // idle: 3000,
+            idle: 1800000,
             keepTracking: true,
             startAtIdle: true
         }).start();
     }
 })
-
 
 function addController(controllerId, controllerName) {
 
@@ -57,9 +56,7 @@ function dataTableController() {
         columns: [
             { data: 'id' },
             { data: 'ip_address' },
-            {
-                data: 'controller_name'
-            },
+            { data: 'controller_name' },
             { data: 'time_added' },
             { data: 'session' },
             {
@@ -243,48 +240,46 @@ function successResponse(response) {
         var btnSave = $('<button type="button" class="btn btn-outline-warning bx bx-save text-nowrap btn-save"></button>');
         machineSetupBtn.empty().append(btnSave);
 
-        $(document).on('click', '.btn-save', function () {
+        $('#dataTableVar').on('click', '.btn-save', function () {
             var id = $(this).closest('tr').find('td:eq(0)').text();
             var sessionID = $(this).closest('tr').find('td:eq(2)').text();
             var selectedArea = $('#area_var').val();
             var selectedMachineName = $('#machine_name_var').val();
+            console.log("🚀 ~ file: main.js:248 ~ selectedMachineName:", selectedMachineName)
 
             var formData = new FormData();
             formData.append('id', id);
             formData.append('selectedArea', selectedArea);
             formData.append('selectedMachineName', selectedMachineName);
+            formData.append('sessionID', sessionID);
+
+            // var formRequest = new FormData();
+            // formRequest.append('mach201_id', selectedMachineName)
 
             makeAjaxRequest('/updateClientData', formData);
+            // makeApiRequest('/fetchApiData', formRequest)
             passDataToClient(sessionID, selectedMachineName);
         });
 
     });
-
-    function passDataToClient(sessionID, selectedMachineName) {
-        var socket = io.connect();
-
-        console.log("Session ID:", sessionID);
-        socket.emit('sendDataToClient', { 'sessionID': sessionID, 'selectedMachineName': selectedMachineName });
-
-        socket.on('response', function (data) {
-            console.log('Received server response:', data);
-        });
-    }
-
 
     function getMachinesNamesApi() {
         $.ajax({
             url: "/getMachinesNamesApi",
             type: "GET",
             success: function (response) {
-                var machineNames = response;
-                var select = $("#machine_name_var");
-                select.select2({
-                    dropdownParent: $('#exLargeModal')
-                })
+                result = response
 
-                $.each(machineNames, function (index, name) {
-                    select.append($('<option></option>').val(name).html(name));
+                var select = $("#machine_name_var");
+                select.empty();
+
+                $.each(result, function (index, name) {
+                    select.append($('<option></option>').val(name.MACH201_ID).html(name.MACHNO + " ( " + name.CLASS + " )"));
+                });
+
+                select.select2({
+                    dropdownParent: $('#exLargeModal'),
+                    width: '100%'
                 });
             },
             error: function (error) {
@@ -305,10 +300,13 @@ function makeAjaxRequest(url, data) {
         beforeSend: function () {
         },
         success: function (response) {
+            console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequest ~ response:", response.data)
+            // result = response.data
+            // console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequest ~ response:", result[0])
+            // console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequest ~ response:", result[1])
             table.ajax.reload();
-            $('#DataTables_Table_0').DataTable().ajax.reload();
-            // controllerModal.ajax.reload();dataTableVar
-            responseResponse(response)
+            // responseResponse(response)
+            passDataToClient(response)
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -331,6 +329,23 @@ function makeAjaxRequest(url, data) {
     }).done(function () {
     })
 }
+
+
+function passDataToClient(response) {
+    console.log("🚀 ~ file: main.js:335 ~ passDataToClient ~ response:", response)
+    var socket = io.connect();
+    dataToPass = response.data
+    sessionID = response
+    console.log("🚀 ~ file: main.js:338 ~ passDataToClient ~ sessionID:", sessionID)
+    console.log("🚀 ~ file: main.js:337 ~ passDataToClient ~ dataToPass:", dataToPass)
+
+    socket.emit('sendDataToClient', { 'sessionID': sessionID, 'data': dataToPass });
+
+    // socket.on('response', function (data) {
+    //     console.log('Received server response:', data);
+    // });
+}
+
 
 function responseResponse(response) {
     Swal.fire({

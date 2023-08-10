@@ -1,149 +1,118 @@
 {% block sidenav %}
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a class="app-brand-link">
-        <span class="app-brand-logo demo">
-          <img src="{{url_for('static', filename='assets/logo.png')}}" alt="" height="50" width="80" draggable="false"
-               style=" pointer-events: none;">
-        </span>
-            <span class="app-brand-text menu-text fw-bolder">Machine <br>Metric <br>System</span>
-        </a>
+      <a class="app-brand-link">
+        <span class="app-brand-logo demo"><img src="{{ url_for('static', filename = 'assets/logo.png') }}" alt="" height="50" width="80" draggable="false" style=" pointer-events: none;" /></span>
+        <span class="app-brand-text menu-text fw-bolder">Equpment <br />Performance <br />Tracking <br />System</span>
+      </a>
 
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"><i
-                class="bx bx-chevron-left bx-sm align-middle"></i></a>
+      <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"><i class="bx bx-chevron-left bx-sm align-middle"></i></a>
     </div>
 
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-        <!-- Dashboard -->
-        <li class="menu-item active open" draggable="false">
-            <a href="{{url_for('dashboard')}}" class="menu-link" draggable="false">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Dashboard</span>
+      </li>
+      <!-- Dashboard -->
+      <li class="menu-item active open" draggable="false">
+        <a href="{{ url_for('dashboard') }}" class="menu-link" draggable="false">
+          <i class="menu-icon tf-icons bx bx-home-circle"></i>
+          <div data-i18n="Analytics">Dashboard</div>
+        </a>
+      </li>
 
-        <!-- Layouts -->
+      <!-- Layouts -->
 
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Pages</span>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                <div data-i18n="Controller Informations">Controller Informations</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="{{url_for('controller_info')}}" class="menu-link">
-                        <div data-i18n="controller-info">Controller Info</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{url_for('controller_data')}}" class="menu-link">
-                        <div data-i18n="Notifications">Controllers Data</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="pages-account-settings-connections.html" class="menu-link">
-                        <div data-i18n="Connections">Connections</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Dashboard</div>
-            </a>
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Pages</span>
+      </li>
+      <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-dock-top"></i>
+          <div data-i18n="Controller Informations">Controller Informations</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="{{ url_for('controller_info') }}" class="menu-link"><div data-i18n="controller-info">Controller Info</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="{{ url_for('controller_data') }}" class="menu-link"><div data-i18n="Notifications">Controllers Data</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="pages-account-settings-connections.html" class="menu-link"><div data-i18n="Connections">Connections</div></a>
+          </li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-layout"></i>
+          <div data-i18n="Layouts">Dashboard</div>
+        </a>
 
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
-                        <div data-i18n="Without menu">WIREBOND</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-without-navbar.html" class="menu-link">
-                        <div data-i18n="Without navbar">END OF LINE 1</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-container.html" class="menu-link">
-                        <div data-i18n="Container">END OF LINE 2</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-fluid.html" class="menu-link">
-                        <div data-i18n="Fluid">DIE ATTACH</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-blank.html" class="menu-link">
-                        <div data-i18n="Blank">DIE PREP</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-blank.html" class="menu-link">
-                        <div data-i18n="Blank">MOLD</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div data-i18n="Misc">Machine Data</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="{{url_for('data_gather')}}" class="menu-link">
-                        <div data-i18n="Error">Data Gather</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="pages-misc-under-maintenance.html" class="menu-link">
-                        <div data-i18n="Under Maintenance">Under Maintenance</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="{{ url_for('area_wirebond') }}" class="menu-link"><div data-i18n="Without menu">WIREBOND</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="layouts-without-navbar.html" class="menu-link"><div data-i18n="Without navbar">END OF LINE 1</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="layouts-container.html" class="menu-link"><div data-i18n="Container">END OF LINE 2</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="layouts-fluid.html" class="menu-link"><div data-i18n="Fluid">DIE ATTACH</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="layouts-blank.html" class="menu-link"><div data-i18n="Blank">DIE PREP</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="layouts-blank.html" class="menu-link"><div data-i18n="Blank">MOLD</div></a>
+          </li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-cube-alt"></i>
+          <div data-i18n="Misc">Machine Data</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="{{ url_for('data_gather') }}" class="menu-link"><div data-i18n="Error">Data Gather</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="{{ url_for('activity_logs') }}" class="menu-link"><div data-i18n="Actity Logs">Actity Logs</div></a>
+          </li>
+        </ul>
+      </li>
 
-        <!-- Extended components -->
-        <li class="menu-item">
-            <a href="javascript:void(0)" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-copy"></i>
-                <div data-i18n="Extended UI">Extended UI</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
-                        <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="extended-ui-text-divider.html" class="menu-link">
-                        <div data-i18n="Text Divider">Text Divider</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+      <!-- Extended components -->
+      <li class="menu-item">
+        <a href="javascript:void(0)" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Extended UI">Extended UI</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="extended-ui-perfect-scrollbar.html" class="menu-link"><div data-i18n="Perfect Scrollbar">Perfect scrollbar</div></a>
+          </li>
+          <li class="menu-item">
+            <a href="extended-ui-text-divider.html" class="menu-link"><div data-i18n="Text Divider">Text Divider</div></a>
+          </li>
+        </ul>
+      </li>
 
-        <li class="menu-item">
-            <a href="icons-boxicons.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-crown"></i>
-                <div data-i18n="Boxicons">Boxicons</div>
-            </a>
-        </li>
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Roles & Permissions</span>
+      </li>
 
-        <!-- Tables -->
-        <li class="menu-item">
-            <a href="tables-basic.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-table"></i>
-                <div data-i18n="Tables">Tables</div>
-            </a>
-        </li>
+      <li class="menu-item">
+        <a href="icons-boxicons.html" class="menu-link">
+          <i class="menu-icon tf-icons bx bxs-terminal"></i>
+          <div data-i18n="Boxicons">Permissions</div>
+        </a>
+      </li>
     </ul>
-</aside>
+  </aside>
 {% endblock %}

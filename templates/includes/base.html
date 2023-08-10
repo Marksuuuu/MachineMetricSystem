@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Machine Metric System</title>
+    <title>Equipment Performance Tracking System</title>
 
     <meta name="description" content="" />
 
@@ -38,17 +38,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/vendor/fonts/flag-icons.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/vendor/fonts/flag-icons.css') }}" />
 
-    <link rel="stylesheet" href="{{url_for('static', filename='libs/bootstrap5/css/buttons.bootstrap5.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='libs/bootstrap5/css/datatables.bootstrap5.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='libs/bootstrap5/css/datatables.checkboxes.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='libs/bootstrap5/css/rowgroup.bootstrap5.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/bootstrap5/css/buttons.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/bootstrap5/css/datatables.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/bootstrap5/css/datatables.checkboxes.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/bootstrap5/css/rowgroup.bootstrap5.css') }}" />
 
     <!-- Page CSS -->
     <!-- Page -->
     <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/vendor/css/pages/page-auth.css') }}" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.18/dist/sweetalert2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/bootstrap5/css/datatables.bootstrap5.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'libs/bootstrap5/css/datatables.bootstrap5.css') }}" />
     <!-- Helpers -->
     <script src="{{ url_for('static', filename = 'assets/vendor/js/helpers.js') }}"></script>
 
@@ -81,21 +81,19 @@
     <script src="{{ url_for('static', filename = 'jquery/main.js') }}"></script>
     <script src="{{ url_for('static', filename = 'jquery/data.js') }}"></script>
     <script src="{{ url_for('static', filename = 'jquery/login.js') }}"></script>
-    <script src="{{ url_for('static', filename = 'assets/socketio/main.js') }}"></script>
-    <script src="{{ url_for('static', filename = 'assets/socketio/socket.io-1.2.0.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'jquery/add-permissions.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js" integrity="sha512-Z6C1p1NIexPj5MsVUunW4pg7uMX6/TT3CUVldmjXx2kpip1eZcrAnxIusDxyFIikyM9A61zOVNgvLr/TGudOQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="{{ url_for('static', filename = 'assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.18/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ url_for('static', filename = 'libs/bootstrap5/css/js/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ url_for('static', filename = 'assets/js/vanilla-idle.js')}}"></script>
+    <script src="{{ url_for('static', filename = 'assets/js/vanilla-idle.js') }}"></script>
     <script src="{{ url_for('static', filename = 'libs/bootstrap5/css/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'libs/bootstrap5/css/js/jquery.dataTables.min.js') }}"></script>
-    <!-- Add this line to your HTML file -->
-    <!-- Page JS -->
     <script src="{{ url_for('static', filename = 'assets/js/ui-popover.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'flask-socketio/main.js') }}"></script>
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
