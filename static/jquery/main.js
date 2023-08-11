@@ -15,13 +15,14 @@ $('document').ready(function () {
         idle({
             onIdle: function () {
                 Swal.fire({
-                    title: 'You have been log out!',
-                    text: "You have been idle for a long time..",
+                    title: 'Is anyone present?',
+                    text: 'You have been idle for an extended period of time.',
                     icon: 'warning',
+                    showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     allowOutsideClick: false,
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'Log me out'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = '/logout'
@@ -49,11 +50,35 @@ function addController(controllerId, controllerName) {
 }
 
 function dataTableController() {
+    $('#DataTables_Table_0').DataTable().destroy()
     table = $('#DataTables_Table_0').DataTable({
         processing: true,
         ajax: '/controller',
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
         columns: [
+            {
+                data: null,
+                className: 'text-center',
+                render: function (row) {
+                    var buttonHtml = '';
+                    if (row.controller_name === null) {
+                        buttonHtml += ' <div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
+                            ' <button type="button" class="btn btn-outline-success bx bxs-pencil swal-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>' +
+                            '<button type="button" class="btn btn-outline-info bx bx-list-ol show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '"></button>' +
+                            '<button type="button" class="btn btn-outline-danger bx bx-trash delete-btn" data-id="' + row.id + '"></button>' +
+                            '</div>';
+                    } else {
+                        buttonHtml += ' <div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
+                            ' <button type="button" class="btn btn-outline-primary bx bxs-edit swal-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '" show-controller="' + row.controller_name + '"></button>' +
+                            '<button type="button" class="btn btn-outline-info bx bx-list-ol show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '" show-controller="' + row.controller_name + '"></button>' +
+                            '<button type="button" class="btn btn-outline-danger bx bx-trash delete-btn" data-id="' + row.id + '"></button>' +
+                            '</div>';
+                    }
+
+
+                    return buttonHtml;
+                }
+            },
             { data: 'id' },
             { data: 'ip_address' },
             { data: 'controller_name' },
@@ -189,6 +214,7 @@ function makeRequest(url, data) {
 }
 
 function successResponse(response) {
+    $('#dataTableVar').DataTable().destroy()
     var dataResult = response.data;
     dataResult.forEach(function (row) {
         var newRow = '<tr>' +
@@ -258,7 +284,7 @@ function successResponse(response) {
 
             makeAjaxRequest('/updateClientData', formData);
             // makeApiRequest('/fetchApiData', formRequest)
-            passDataToClient(sessionID, selectedMachineName);
+            // passDataToClient(sessionID, selectedMachineName);
         });
 
     });
@@ -300,6 +326,7 @@ function makeAjaxRequest(url, data) {
         beforeSend: function () {
         },
         success: function (response) {
+            console.log("🚀 ~ file: main.js:303 ~ makeAjaxRequest ~ response:", response.sessionID)
             console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequest ~ response:", response.data)
             // result = response.data
             // console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequest ~ response:", result[0])
@@ -332,18 +359,19 @@ function makeAjaxRequest(url, data) {
 
 
 function passDataToClient(response) {
-    console.log("🚀 ~ file: main.js:335 ~ passDataToClient ~ response:", response)
     var socket = io.connect();
     dataToPass = response.data
-    sessionID = response
-    console.log("🚀 ~ file: main.js:338 ~ passDataToClient ~ sessionID:", sessionID)
-    console.log("🚀 ~ file: main.js:337 ~ passDataToClient ~ dataToPass:", dataToPass)
+    sessionID = response.sessionID
+    console.log("🚀 ~ file: main.js:343 ~ passDataToClient ~ sessionID:", sessionID)
+    data = dataToPass[0]
+    console.log("🚀 ~ file: main.js:345 ~ passDataToClient ~ data:", data)
+    var data = {
+        sessionID: sessionID,
+        dataToPass: dataToPass
+    };
+    console.log("🚀 ~ file: main.js:346 ~ passDataToClient ~ data:", data)
 
-    socket.emit('sendDataToClient', { 'sessionID': sessionID, 'data': dataToPass });
-
-    // socket.on('response', function (data) {
-    //     console.log('Received server response:', data);
-    // });
+    socket.emit('sendDataToClient', data);
 }
 
 

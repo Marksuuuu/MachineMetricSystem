@@ -54,7 +54,7 @@ def load_user(user_id):
     return User(user_id, firstname, lastname, username, fullname, employee_department, photo_url)
 
 
-##ROUTE WITH FUNCTIONS
+# ROUTE WITH FUNCTIONS
 
 @app.route('/showAll', methods=['POST'])
 def showAll():
@@ -87,19 +87,118 @@ def showAll():
             """, (port,))
             rows = cursor.fetchall()
 
-    # Process the results and return the JSON response
+# @app.route('/showAllMatrix', methods=['POST'])
+# def showAllMatrix():
+#     port = request.form['controllerIp']
+#     print(f"==>> port: {port}")
+#     print('trigger here')
+#     # Using a context manager for the connection and cursor
+#     with psycopg2.connect(**db_config) as conn:
+#         with conn.cursor() as cursor:
+#             cursor.execute("""
+#                 SELECT
+#                     id as ID,
+#                     ip_address as IP,
+#                     session as SESSION,
+#                     port_name as PORT,
+#                     machine_setup as MACHINE_SETUP,
+#                     time_added as TIME_ADDED,
+#                     start as START,
+#                     stop as STOP,
+#                     status as STATUS,
+#                     area as AREA
+#                 FROM
+#                     connected_clients_data_tbl
+#                 WHERE
+#                     (ip_address, id) IN (
+#                         SELECT ip_address, MAX(id)
+#                         FROM connected_clients_data_tbl
+#                         GROUP BY ip_address
+#                     )
+#                 AND ip_address = %s
+#             """, (port,))
+#             rows = cursor.fetchall()
+
+#     # Process the results and return the JSON response
+#     result = []
+#     for row in rows:
+#         result.append({
+#             'ID': row[0],
+#             'IP': row[1],
+#             'SESSION': row[2],
+#             'PORT': row[3],
+#             'MACHINE_SETUP': row[4],
+#             'TIME_ADDED': row[5],
+#             'STATUS': row[8],
+#         })
+
+#     return jsonify({'data': result})
+
+
+@app.route('/showAllMatrix', methods=['POST'])
+def updateTotalResult():
+    port = request.form['controllerIp']
+    with psycopg2.connect(**db_config) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT
+                    id as ID,
+                    ip_address as IP,
+                    session as SESSION,
+                    port_name as PORT,
+                    machine_setup as MACHINE_SETUP,
+                    time_added as TIME_ADDED,
+                    start as START,
+                    stop as STOP,
+                    status as STATUS,
+                    area as AREA
+                FROM
+                    connected_clients_data_tbl
+                WHERE
+                    (ip_address, id) IN (
+                        SELECT ip_address, MAX(id)
+                        FROM connected_clients_data_tbl
+                        GROUP BY ip_address
+                    )
+                AND ip_address = %s
+            """, (port,))
+            rows = cursor.fetchall()
+
+    external_url = 'http://cmms.teamglac.com/apimachine3.php?id='
+
     result = []
     for row in rows:
-        result.append({
-            'ID': row[0],
-            'IP': row[1],
-            'SESSION': row[2],
-            'PORT': row[3],
-            'MACHINE_SETUP': row[4],
-            'TIME_ADDED': row[5],
-            'STATUS': row[8],
-            'AREA': row[9]
-        })
+        ID = row[0],
+        IP = row[1],
+        SESSION = row[2],
+        PORT = row[3],
+        machine_setup_value = row[4]
+        TIME_ADDED = row[5],
+        STATUS = row[8],
+        full_url = f'{external_url}{machine_setup_value}'
+        response = requests.post(full_url)
+
+        if response.status_code == 200:
+            response_data = response.json()
+
+            if 'data' in response_data and len(response_data['data']) > 0:
+                machno_value = response_data['data'][0]['MACHNO']
+                print(f"MACHNO: {machno_value}")
+
+                result.append({
+                    'ID': ID,
+                    'IP': IP,
+                    'SESSION': SESSION,
+                    'PORT': PORT,
+                    'MACHINE_SETUP': machno_value,
+                    'TIME_ADDED': TIME_ADDED,
+                    'STATUS': STATUS,
+                })
+
+            else:
+                print("No 'MACHNO' value found in the response data.")
+        else:
+            print(f"Request failed with status code: {response.status_code}")
 
     return jsonify({'data': result})
 
@@ -114,7 +213,8 @@ def saveController():
         return "Invalid ID. Please provide a valid integer for the ID."
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM public.controller_tbl WHERE controller_name = %s", (name,))
+            cur.execute(
+                "SELECT COUNT(*) FROM public.controller_tbl WHERE controller_name = %s", (name,))
             count = cur.fetchone()[0]
             if count == 0:
                 cur.execute("""
@@ -228,13 +328,49 @@ def controller():
         return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
 
 
+@app.route('/matrixControllers')
+def matrixControllers():
+    try:
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                id, 
+                ip_address, 
+                controller_name, 
+                time_added, 
+                session
+            FROM 
+                public.controller_tbl;
+        """)
+        rows = cursor.fetchall()
+        controllers = []
+        for row in rows:
+            controllers.append({
+                'id': row[0],
+                'ip_address': row[1],
+                'controller_name': row[2],
+                'time_added': row[3],
+                'session': row[4],
+            })
+        conn.commit()  # Commit the transaction before closing the cursor
+        cursor.close()
+        conn.close()
+        return jsonify({'data': controllers})
+    except Exception as e:
+        conn.rollback()  # Rollback the transaction in case of an error
+        cursor.close()
+        conn.close()
+        print("Error executing query:", e)
+        return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
+
+
 @app.route('/getMachinesNamesApi')
 def getMachinesNamesApi():
     url = 'http://cmms.teamglac.com/apimachine2.php'
     response = requests.get(url)
     data = json.loads(response.text)['data']
     return jsonify(data)
-
 
 
 @app.route('/updateClientData', methods=['POST'])
@@ -244,14 +380,14 @@ def updateClientData():
     print(f"==>> id: {id}")
     selectedArea = request.form['selectedArea']
     selectedMachineName = request.form['selectedMachineName']
-    
+
     hris = f'http://devapps.teamglac.com/paperless_pt_test/api/api_assigned_pt.php?mach_201={int(selectedMachineName)}'
     response = requests.get(hris)
     data_list = json.loads(response.text)['data']  # Assuming data is a list
-    
+
     if not data_list:
         res = 'nodata'
-        return jsonify(res)
+        return jsonify({'data': res, 'sessionID': sessionID})
     else:
         # Assuming data_list contains dictionaries, iterate over them
         results = []
@@ -259,7 +395,7 @@ def updateClientData():
             main_opt = data['main_opt']
             sub_opt = data['sub_opt']
             wip_entity_name = data['wip_entity_name']
-            
+
             # Update client data in the database
             with psycopg2.connect(**db_config) as conn:
                 with conn.cursor() as cur:
@@ -270,17 +406,14 @@ def updateClientData():
                                     machine_setup=%s, area=%s
 	                            WHERE id = %s;""", (selectedMachineName, selectedArea, id,))
                     msg = "UPDATE SUCCESS"
-            
+
             result = {
                 'main_opt': main_opt,
                 'wip_entity_name': wip_entity_name,
                 'sub_opt': sub_opt,
             }
             results.append(result)
-        
-        return jsonify({'data': results, 'sessonID': sessionID})
-
-
+        return jsonify({'data': results, 'sessionID': sessionID})
 
 
 @app.route('/deleteController', methods=['POST'])
@@ -316,7 +449,7 @@ def get_emp_id():
         firstname = data['firstname']
         lastname = data['lastname']
         print(data)
-        
+
         result = [
             employee_department,
             firstname,
@@ -374,17 +507,17 @@ def login():
         return render_template('login.html')
 
 
-##TRIGGER
+# TRIGGER
 
 
-##SOCKETIO-RESPONSE-FUNCTION
+# SOCKETIO-RESPONSE-FUNCTION
 
 def saveDatabaseClient(data):
-    # print(f"==>> data: {data}")
+    print(f"==>> data: {data}")
     ipAddress = request.remote_addr
-    # print(f"==>> ipAddress: {ipAddress}")
     dateAdded = str(datetime.now())
     machineName = data.get('machine_name', '')
+    print(f"==>> machineName: {machineName}")
     machineNameNoPy = re.sub('.py', '', machineName)
     session = request.sid
     print(f"==>> session: {session}")
@@ -405,10 +538,10 @@ def saveDatabaseClient(data):
                     cur.execute(
                         """
                         UPDATE public.connected_clients_data_tbl
-                        SET session=%s, time_added=%s, status=%s
+                        SET session=%s, port_name=%s, time_added=%s, status=%s
                         WHERE ip_address=%s;
                         """,
-                        (session, dateAdded, status, ipAddress,)
+                        (session, machineNameNoPy, dateAdded, status, ipAddress,)
                     )
                     msg = "UPDATE SUCCESS"
                     conn.commit()
@@ -537,6 +670,7 @@ def getData():
         # print("Error executing query:", e)
         return None
 
+
 @socketio.on('connect')
 def connect():
     client_sid = request.sid
@@ -545,9 +679,11 @@ def connect():
     if data is not None:
         socketio.emit('details',  data)
     else:
-        socketio.emit('details', {'error': 'An error occurred while fetching controllers.'})
+        socketio.emit(
+            'details', {'error': 'An error occurred while fetching controllers.'})
 
-##SOCKET-IO##
+## SOCKET-IO##
+
 
 @socketio.on('disconnect')
 def disconnect():
@@ -562,13 +698,12 @@ def handle_disconnect(data):
 @socketio.on('controller')
 def handle_controller(data):
     saveDatabaseController(data)
-    
-    
+
+
 @socketio.on('passActivityData')
 def handle_activity(data):
-    # print(f"==>> data: {data}")
     socketio.emit('passingDataToJs', data)
-    
+
 
 @socketio.on('client')
 def handle_client(data):
@@ -577,9 +712,12 @@ def handle_client(data):
 
 @socketio.on('sendDataToClient')
 def handle_custom_event(data):
+    print(f"==>> data: {data}")
     sid = data['sessionID']
-    dataToPass = data['dataToPass']
-    socketio.emit('my_message', {'dataToPass': dataToPass}, to=sid)
+    print(f"==>> sid: {sid}")
+    dataValue = data['dataToPass']
+    print(f"==>> dataValue: {dataValue}")
+    socketio.emit('my_message', {'dataToPass': dataValue}, to=sid)
 
 
 @socketio.on('data')
@@ -623,14 +761,13 @@ def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
             conn.commit()
             return jsonify("Data inserted successfully into the database")
     except psycopg2.Error as e:
-        error_message = "Error inserting/updating data in the database: " + str(e)
+        error_message = "Error inserting/updating data in the database: " + \
+            str(e)
         conn.rollback()
         return jsonify(error_message)
-    
 
 
-
-##ROUTES - AREA / DASHBOARD##
+## ROUTES - AREA / DASHBOARD##
 
 @app.route('/area-wirebond')
 def area_wirebond():
@@ -642,7 +779,7 @@ def area_end_of_line_1():
     return render_template('area-end-of-line-1.html')
 
 
-##ROUTES
+# ROUTES
 @app.route('/logout')
 @login_required
 def logout():
@@ -656,10 +793,16 @@ def controller_info():
     return render_template('controller-info.html')
 
 
-@app.route('/controller-data')
+@app.route('/machine-setup')
 @login_required
-def controller_data():
+def machine_setup():
     return render_template('controller-data.html')
+
+
+@app.route('/matrix-setup')
+@login_required
+def matrix_setup():
+    return render_template('matrix-setup.html')
 
 
 @app.route('/data-gather')
