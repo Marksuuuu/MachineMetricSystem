@@ -376,6 +376,51 @@ def matrixControllers():
         return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
 
 
+@app.route('/matrixData')
+def matrixData():
+    try:
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                id, 
+                area, 
+                time_added, 
+                matrix1, 
+                matrix2, 
+                matrix3, 
+                matrix4, 
+                matrix5, 
+                matrix6
+	        FROM 
+                public.matrix_maintenance_tbl;
+        """)
+        rows = cursor.fetchall()
+        controllers = []
+        for row in rows:
+            controllers.append({
+                'id': row[0],
+                'area': row[1],
+                'time_added': row[2],
+                'matrix1': row[3],
+                'matrix2': row[4],
+                'matrix3': row[5],
+                'matrix4': row[6],
+                'matrix5': row[7],
+                'matrix6': row[8]
+            })
+        conn.commit()  # Commit the transaction before closing the cursor
+        cursor.close()
+        conn.close()
+        return jsonify({'data': controllers})
+    except Exception as e:
+        conn.rollback()  # Rollback the transaction in case of an error
+        cursor.close()
+        conn.close()
+        print("Error executing query:", e)
+        return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
+
+
 @app.route('/getMachinesNamesApi')
 def getMachinesNamesApi():
     url = 'http://cmms.teamglac.com/apimachine2.php'
@@ -488,7 +533,36 @@ def matrixInput():
                 cur.execute(
                     "INSERT INTO public.matrix_logs_tbl(matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, date_added) "
                     "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, dateAdded)
+                    (matrix1, matrix2, matrix3, matrix4,
+                     matrix5, matrix6, dateAdded)
+                )
+                conn.commit()  # commit the transaction
+    except Error as e:
+        msg = f"ERROR: {e}"
+
+    return msg  # Return the result message
+
+
+@app.route('/matrixMaintenanceInputs', methods=['POST'])
+def matrixMaintenanceInputs():
+    area = request.form['defaultSelect']
+    matrix1 = request.form['matrix1']
+    matrix2 = request.form['matrix2']
+    matrix3 = request.form['matrix3']
+    matrix4 = request.form['matrix4']
+    matrix5 = request.form['matrix5']
+    matrix6 = request.form['matrix6']
+    dateAdded = str(datetime.now())
+    msg = "INSERT SUCCESS"
+
+    try:
+        with psycopg2.connect(**db_config) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO public.matrix_maintenance_tbl(area, time_added, matrix1, matrix2, matrix3, matrix4, matrix5, matrix6) "
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                    (area, dateAdded, matrix1, matrix2,
+                     matrix3, matrix4, matrix5, matrix6)
                 )
                 conn.commit()  # commit the transaction
     except Error as e:
@@ -750,23 +824,23 @@ def handle_client(data):
 @socketio.on('sendMatrixToClient')
 def handle_matrix_data(data):
     print("==>> data:", data)
-    
+
     sessionID = data['sessionID']
     print("==>> sessionID:", sessionID)
-    
+
     matrix_inputs = [data[f'matrixInput{i}'] for i in range(1, 7)]
-    
+
     value1, value2, value3, value4, value5, value5 = matrix_inputs
     print(f"==>> matrix_inputs: {matrix_inputs}")
-    
+
     index_to_remove = 0
     if index_to_remove < len(sessionID):
         removed_value = sessionID.pop(index_to_remove)
         print("Removed session ID value:", removed_value)
-    
-    # Uncomment the following line if you want to emit data back to the client
-    socketio.emit('getMatrixfromServer', {'dataToPass': matrix_inputs}, to=sessionID)
 
+    # Uncomment the following line if you want to emit data back to the client
+    socketio.emit('getMatrixfromServer', {
+                  'dataToPass': matrix_inputs}, to=sessionID)
 
 
 @socketio.on('sendDataToClient')
