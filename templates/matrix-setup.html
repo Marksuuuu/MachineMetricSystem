@@ -51,95 +51,97 @@
             </div>
             <div class="modal fade" id="matrixShowModal" tabindex="-1" aria-hidden="true" modal-id="" modal-name="">
               <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title"><span class="badge bg-label-primary" id="matrix_modal"></span></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="divider">
-                    <div class="divider-text">MATRIX INPUT</div>
-                  </div>
-                  <div class="modal-body">
-                    <div class="table-responsive">
-                      <div class="mb-4">
-                        <div class="row g-3">
-                          <div class="col-md-6">
-                            <div class="row">
-                              <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
-                              <div class="col-sm-9">
-                                <input type="text" id="formtabs-matrix1" class="form-control" placeholder="Matrix input" />
+                <div id='waitMeContainerMatrix'>
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title"><span class="badge bg-label-primary" id="matrix_modal"></span></h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="divider">
+                      <div class="divider-text">MATRIX INPUT</div>
+                    </div>
+                    <div class="modal-body">
+                      <div class="table-responsive">
+                        <div class="mb-4">
+                          <div class="row g-3">
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
+                                <div class="col-sm-9">
+                                  <input type="text" id="formtabs-matrix1" class="form-control" placeholder="Matrix input" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="row">
-                              <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
-                              <div class="col-sm-9">
-                                <input type="text" id="formtabs-matrix2" class="form-control" placeholder="Matrix input" />
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
+                                <div class="col-sm-9">
+                                  <input type="text" id="formtabs-matrix2" class="form-control" placeholder="Matrix input" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="row">
-                              <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
-                              <div class="col-sm-9">
-                                <input type="text" id="formtabs-matrix3" class="form-control" placeholder="Matrix input" />
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
+                                <div class="col-sm-9">
+                                  <input type="text" id="formtabs-matrix3" class="form-control" placeholder="Matrix input" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="row">
-                              <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
-                              <div class="col-sm-9">
-                                <input type="text" id="formtabs-matrix4" class="form-control" placeholder="Matrix input" />
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
+                                <div class="col-sm-9">
+                                  <input type="text" id="formtabs-matrix4" class="form-control" placeholder="Matrix input" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="row">
-                              <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
-                              <div class="col-sm-9">
-                                <input type="text" id="formtabs-matrix5" class="form-control" placeholder="Matrix input" />
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
+                                <div class="col-sm-9">
+                                  <input type="text" id="formtabs-matrix5" class="form-control" placeholder="Matrix input" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="row">
-                              <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
-                              <div class="col-sm-9">
-                                <input type="text" id="formtabs-matrix6" class="form-control" placeholder="Matrix input" />
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-matrix">Matrix</label>
+                                <div class="col-sm-9">
+                                  <input type="text" id="formtabs-matrix6" class="form-control" placeholder="Matrix input" />
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <div class="divider mt-5">
+                          <div class="divider-text">TABLE</div>
+                        </div>
+                        <table class="table table-bordered dataTable no-footer" id="matrix_setup_tbl_id" aria-describedby="matrix_setup_tbl_id_info">
+                          <thead>
+                            <tr>
+                              <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">
+                                <div class="form-check">
+                                  <input class="form-check-input selectall" name="sample" type="checkbox" value="" id="flexCheckDisabled" />
+                                </div>
+                              </th>
+                              <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">ID</th>
+                              <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">IP ADDRESS</th>
+                              <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">SESSION</th>
+                              <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">PORT NAME</th>
+                              <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" style="width: 230px;">MACHINE</th>
+                              <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
+                              <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">STATUS</th>
+                            </tr>
+                          </thead>
+                          <tbody id="matrix_setup_tbl_idTbody"></tbody>
+                        </table>
                       </div>
-                      <div class="divider mt-5">
-                        <div class="divider-text">TABLE</div>
-                      </div>
-                      <table class="table table-bordered dataTable no-footer" id="matrix_setup_tbl_id" aria-describedby="matrix_setup_tbl_id_info">
-                        <thead>
-                          <tr>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">
-                              <div class="form-check">
-                                <input class="form-check-input selectall" name="sample" type="checkbox" value="" id="flexCheckDisabled" />
-                              </div>
-                            </th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">ID</th>
-                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">IP ADDRESS</th>
-                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">SESSION</th>
-                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">PORT NAME</th>
-                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" style="width: 230px;">MACHINE</th>
-                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
-                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">STATUS</th>
-                          </tr>
-                        </thead>
-                        <tbody id="matrix_setup_tbl_idTbody"></tbody>
-                      </table>
                     </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
+                    </div>
                   </div>
                 </div>
               </div>

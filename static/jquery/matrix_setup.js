@@ -179,7 +179,7 @@ function dataValues() {
     }
 
     sendMatrixToClient(matrixInput1, matrixInput2, matrixInput3, matrixInput4, matrixInput5, matrixInput6, checkedSessionIDs)
-    // ajaxRequest('/matrixInput', formData) 
+    matrixAjaxRequest('/matrixInput', formData)
 }
 
 
@@ -198,7 +198,7 @@ function sendMatrixToClient(matrixInput1, matrixInput2, matrixInput3, matrixInpu
     socket.emit('sendMatrixToClient', data);
 }
 
-function ajaxRequest(url,data) {
+function matrixAjaxRequest(url, data) {
     $.ajax({
         url: url,
         method: 'POST',
@@ -206,8 +206,25 @@ function ajaxRequest(url,data) {
         processData: false,
         contentType: false,
         beforeSend: function () {
+            $('#waitMeContainerMatrix').waitMe({
+                effect: 'rotateplane',
+                text: 'Please wait...',
+                bg: 'rgba(255,255,255,0.7)',
+                color: '#435ebe',
+                maxSize: '',
+                waitTime: -1,
+                textPos: 'vertical',
+                fontSize: '',
+                source: ''
+            });
+
         },
         success: function (response) {
+            Swal.fire(
+                'Saved!',
+                'Your file has been saved.',
+                'success'
+            )
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -228,6 +245,8 @@ function ajaxRequest(url,data) {
             }
         }
     }).done(function () {
+        $('#waitMeContainerMatrix').waitMe('hide');
+
     })
 }
 

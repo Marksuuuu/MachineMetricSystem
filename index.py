@@ -473,12 +473,12 @@ def get_emp_id():
 
 @app.route('/matrixInput', methods=['POST'])
 def matrixInput():
-    matrix1 = request.form['matrix1']
-    matrix2 = request.form['matrix2']
-    matrix3 = request.form['matrix3']
-    matrix4 = request.form['matrix4']
-    matrix5 = request.form['matrix5']
-    matrix6 = request.form['matrix6']
+    matrix1 = request.form['matrixInput1']
+    matrix2 = request.form['matrixInput2']
+    matrix3 = request.form['matrixInput3']
+    matrix4 = request.form['matrixInput4']
+    matrix5 = request.form['matrixInput5']
+    matrix6 = request.form['matrixInput6']
     dateAdded = str(datetime.now())
     msg = "INSERT SUCCESS"
 
@@ -486,9 +486,9 @@ def matrixInput():
         with psycopg2.connect(**db_config) as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO public.matrix_logs_tbl(matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, date_added)"
-                    (matrix1, matrix2, matrix3, matrix4,
-                     matrix5, matrix6, dateAdded)
+                    "INSERT INTO public.matrix_logs_tbl(matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, date_added) "
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, dateAdded)
                 )
                 conn.commit()  # commit the transaction
     except Error as e:
