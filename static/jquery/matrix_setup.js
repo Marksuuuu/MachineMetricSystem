@@ -53,7 +53,7 @@ function dataTableMatrixControllers() {
                 }
             }
         ],
-        order: [[3, 'desc']]
+        order: [[1, 'desc']]
     });
 
 

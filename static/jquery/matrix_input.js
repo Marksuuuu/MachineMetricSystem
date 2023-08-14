@@ -7,7 +7,14 @@ $(document).ready(function () {
     $('#saveInputtedMatrix').click(function () {
         submitMatrixInput()
     })
+    $('#single-select-field').select2({
+        dropdownParent: $('#matrixShowModal'),
+        width: '100%'
+    });
+
+
 });
+
 
 function matrixDatatable() {
     $('#matrix_maintainance_tbl_data').DataTable().destroy()
