@@ -5,6 +5,7 @@ $('document').ready(function () {
 
     $('#saveBtn').click(function () {
         dataValues()
+        console.log('test')
     })
 
     $('#matrix_setup_tbl_id').on('click', '.selectall', function () {
@@ -162,19 +163,72 @@ function dataValues() {
     formData.append('matrixInput5', matrixInput5);
     formData.append('matrixInput6', matrixInput6);
 
-    
-    // var checkedSessionIDs = [];
 
-    // $('#matrix_setup_tbl_idTbody input[type="checkbox"]').each(function () {
-    //     var sessionID = $(this).closest('tr').find('td:eq(3)').text(); // Update index to match the correct column
-    //     checkedSessionIDs.push(sessionID);
-    // });
+    var checkedSessionIDs = [];
 
-    // if (checkedSessionIDs.length === 0) {
-    //     console.log("No checkboxes are checked.");
-    // } else {
-    //     console.log("Checked Session IDs:", checkedSessionIDs);
-    // }
+    $('#matrix_setup_tbl_idTbody input[type="checkbox"]').each(function () {
+        var sessionID = $(this).closest('tr').find('td:eq(3)').text(); // Update index to match the correct column
+        console.log("🚀 ~ file: matrix_setup.js:171 ~ sessionID:", sessionID)
+        checkedSessionIDs.push(sessionID);
+    });
+
+    if (checkedSessionIDs.length === 0) {
+        console.log("No checkboxes are checked.");
+    } else {
+        console.log("Checked Session IDs:", checkedSessionIDs);
+    }
+
+    sendMatrixToClient(matrixInput1, matrixInput2, matrixInput3, matrixInput4, matrixInput5, matrixInput6, checkedSessionIDs)
+    // ajaxRequest('/matrixInput', formData) 
+}
+
+
+function sendMatrixToClient(matrixInput1, matrixInput2, matrixInput3, matrixInput4, matrixInput5, matrixInput6, sessionID) {
+    var socket = io.connect();
+    var data = {
+        'matrixInput1': matrixInput1,
+        'matrixInput2': matrixInput2,
+        'matrixInput3': matrixInput3,
+        'matrixInput4': matrixInput4,
+        'matrixInput5': matrixInput5,
+        'matrixInput6': matrixInput6,
+        'sessionID': sessionID,
+    };
+
+    socket.emit('sendMatrixToClient', data);
+}
+
+function ajaxRequest(url,data) {
+    $.ajax({
+        url: url,
+        method: 'POST',
+        data: data,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+        },
+        success: function (response) {
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 0) {
+                alert('No internet connection.')
+            } else if (jqXHR.status === 404) {
+                alert('Requested page not found [404].')
+            } else if (jqXHR.status === 500) {
+                alert('Internal Server Error [500].')
+            } else if (textStatus === 'parsererror') {
+                alert('Requested JSON parsing failed.')
+            } else if (textStatus === 'timeout') {
+                alert('Time out error.')
+            } else if (textStatus === 'abort') {
+                alert('Ajax request aborted.')
+            } else {
+                alert('Uncaught Error: ' + errorThrown)
+            }
+        }
+    }).done(function () {
+    })
 }
 
 

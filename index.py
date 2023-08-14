@@ -71,10 +71,7 @@ def showAll():
                     port_name as PORT,
                     machine_setup as MACHINE_SETUP,
                     time_added as TIME_ADDED,
-                    start as START,
-                    stop as STOP,
-                    status as STATUS,
-                    area as AREA
+                    status as STATUS
                 FROM
                     connected_clients_data_tbl
                 WHERE
@@ -86,6 +83,20 @@ def showAll():
                 AND ip_address = %s
             """, (port,))
             rows = cursor.fetchall()
+    # Process the results and return the JSON response
+    result = []
+    for row in rows:
+        result.append({
+            'ID': row[0],
+            'IP': row[1],
+            'SESSION': row[2],
+            'PORT': row[3],
+            'MACHINE_SETUP': row[4],
+            'TIME_ADDED': row[5],
+            'STATUS': row[6],
+        })
+
+    return jsonify({'data': result})
 
 # @app.route('/showAllMatrix', methods=['POST'])
 # def showAllMatrix():
@@ -460,6 +471,32 @@ def get_emp_id():
         return jsonify({'data': result})
 
 
+@app.route('/matrixInput', methods=['POST'])
+def matrixInput():
+    matrix1 = request.form['matrix1']
+    matrix2 = request.form['matrix2']
+    matrix3 = request.form['matrix3']
+    matrix4 = request.form['matrix4']
+    matrix5 = request.form['matrix5']
+    matrix6 = request.form['matrix6']
+    dateAdded = str(datetime.now())
+    msg = "INSERT SUCCESS"
+
+    try:
+        with psycopg2.connect(**db_config) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO public.matrix_logs_tbl(matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, date_added)"
+                    (matrix1, matrix2, matrix3, matrix4,
+                     matrix5, matrix6, dateAdded)
+                )
+                conn.commit()  # commit the transaction
+    except Error as e:
+        msg = f"ERROR: {e}"
+
+    return msg  # Return the result message
+
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -708,6 +745,28 @@ def handle_activity(data):
 @socketio.on('client')
 def handle_client(data):
     saveDatabaseClient(data)
+
+
+@socketio.on('sendMatrixToClient')
+def handle_matrix_data(data):
+    print("==>> data:", data)
+    
+    sessionID = data['sessionID']
+    print("==>> sessionID:", sessionID)
+    
+    matrix_inputs = [data[f'matrixInput{i}'] for i in range(1, 7)]
+    
+    value1, value2, value3, value4, value5, value5 = matrix_inputs
+    print(f"==>> matrix_inputs: {matrix_inputs}")
+    
+    index_to_remove = 0
+    if index_to_remove < len(sessionID):
+        removed_value = sessionID.pop(index_to_remove)
+        print("Removed session ID value:", removed_value)
+    
+    # Uncomment the following line if you want to emit data back to the client
+    socketio.emit('getMatrixfromServer', {'dataToPass': matrix_inputs}, to=sessionID)
+
 
 
 @socketio.on('sendDataToClient')
