@@ -291,7 +291,6 @@ function successResponse(response) {
             }
         });
     }
-
 }
 
 function makeAjaxRequestData(url, data) {

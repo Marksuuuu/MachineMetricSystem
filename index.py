@@ -98,53 +98,6 @@ def showAll():
 
     return jsonify({'data': result})
 
-# @app.route('/showAllMatrix', methods=['POST'])
-# def showAllMatrix():
-#     port = request.form['controllerIp']
-#     print(f"==>> port: {port}")
-#     print('trigger here')
-#     # Using a context manager for the connection and cursor
-#     with psycopg2.connect(**db_config) as conn:
-#         with conn.cursor() as cursor:
-#             cursor.execute("""
-#                 SELECT
-#                     id as ID,
-#                     ip_address as IP,
-#                     session as SESSION,
-#                     port_name as PORT,
-#                     machine_setup as MACHINE_SETUP,
-#                     time_added as TIME_ADDED,
-#                     start as START,
-#                     stop as STOP,
-#                     status as STATUS,
-#                     area as AREA
-#                 FROM
-#                     connected_clients_data_tbl
-#                 WHERE
-#                     (ip_address, id) IN (
-#                         SELECT ip_address, MAX(id)
-#                         FROM connected_clients_data_tbl
-#                         GROUP BY ip_address
-#                     )
-#                 AND ip_address = %s
-#             """, (port,))
-#             rows = cursor.fetchall()
-
-#     # Process the results and return the JSON response
-#     result = []
-#     for row in rows:
-#         result.append({
-#             'ID': row[0],
-#             'IP': row[1],
-#             'SESSION': row[2],
-#             'PORT': row[3],
-#             'MACHINE_SETUP': row[4],
-#             'TIME_ADDED': row[5],
-#             'STATUS': row[8],
-#         })
-
-#     return jsonify({'data': result})
-
 
 @app.route('/showAllMatrix', methods=['POST'])
 def updateTotalResult():
@@ -152,27 +105,30 @@ def updateTotalResult():
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
-                SELECT
-                    id as ID,
-                    ip_address as IP,
-                    session as SESSION,
-                    port_name as PORT,
-                    machine_setup as MACHINE_SETUP,
-                    time_added as TIME_ADDED,
-                    start as START,
-                    stop as STOP,
-                    status as STATUS,
-                    area as AREA
-                FROM
-                    connected_clients_data_tbl
-                WHERE
-                    (ip_address, id) IN (
-                        SELECT ip_address, MAX(id)
-                        FROM connected_clients_data_tbl
-                        GROUP BY ip_address
-                    )
-                AND ip_address = %s
-            """, (port,))
+                SELECT 
+                    ccdt.id as ID,
+                    ccdt.ip_address as IP,
+                    ccdt.session as SESSION,
+                    ccdt.port_name as PORT,
+                    ccdt.machine_setup as MACHINE_SETUP,
+                    ccdt.time_added as TIME_ADDED,
+                    ccdt.status as STATUS,
+                    ccdt.date_updated as DATE_UPDATE,
+                    MMT.area as AREA
+                FROM (
+                    SELECT
+                        *
+                    FROM
+                        connected_clients_data_tbl
+                    WHERE
+                        (ip_address, id) IN (
+                            SELECT ip_address, MAX(id)
+                            FROM connected_clients_data_tbl
+                            GROUP BY ip_address
+                        )
+                ) ccdt
+                LEFT JOIN public.matrix_maintenance_tbl as MMT ON ccdt.matrix_maintenance_id = MMT.id
+                WHERE ccdt.ip_address = %s""", (port,))
             rows = cursor.fetchall()
 
     external_url = 'http://cmms.teamglac.com/apimachine3.php?id='
@@ -185,7 +141,9 @@ def updateTotalResult():
         PORT = row[3],
         machine_setup_value = row[4]
         TIME_ADDED = row[5],
-        STATUS = row[8],
+        STATUS = row[6],
+        AREA = row[7]
+        DATE_UPDATE = row[8],
         full_url = f'{external_url}{machine_setup_value}'
         response = requests.post(full_url)
 
@@ -203,6 +161,8 @@ def updateTotalResult():
                     'PORT': PORT,
                     'MACHINE_SETUP': machno_value,
                     'TIME_ADDED': TIME_ADDED,
+                    'AREA': AREA,
+                    'DATE_UPDATE': DATE_UPDATE,
                     'STATUS': STATUS,
                 })
 
@@ -421,6 +381,130 @@ def matrixData():
         return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
 
 
+@app.route('/matrixSelect')
+def matrixSelect():
+    try:
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                id, 
+                area, 
+                time_added, 
+                matrix1, 
+                matrix2, 
+                matrix3, 
+                matrix4, 
+                matrix5, 
+                matrix6
+	        FROM 
+                public.matrix_maintenance_tbl;
+        """)
+        rows = cursor.fetchall()
+        controllers = []
+        for row in rows:
+            controllers.append({
+                'id': row[0],
+                'text': row[1],
+
+            })
+        conn.commit()  # Commit the transaction before closing the cursor
+        cursor.close()
+        conn.close()
+        return jsonify({'data': controllers})
+    except Exception as e:
+        conn.rollback()  # Rollback the transaction in case of an error
+        cursor.close()
+        conn.close()
+        print("Error executing query:", e)
+        return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
+
+
+@app.route('/requestDataFromApi', methods=['POST'])
+def requestDataFromApi():
+    data = request.form['selectedValue']
+    with open('cmms-dummy-data.json', 'r') as json_file:
+        json_data = json.load(json_file)
+        
+        if data in json_data['data']['area']:
+            wirebond_data = json_data['data']
+            dataResult = list(wirebond_data['optgrp_name'].keys())
+            print(f"==>> dataResult: {dataResult}")
+        else:
+            dataResult = 1
+
+        return jsonify({'data': dataResult})
+
+
+
+# Function to search for optgrp_names
+# def search_wirebond(data):
+#     wirebond_data = data["data"]["Wirebond"]
+#     optgrp_names = [item["optgrp_name"] for item in wirebond_data]
+#     return optgrp_names
+    # api_area = f"http://testapps.teamglac.com/pl_dashboard/api/api_area.php?area_name={data}"
+    # response = requests.get(api_area)
+    # data_list = json.loads(response.text)['result']
+
+    # if not data_list:
+    #     res = 'nodata'
+    #     return jsonify({'data': res})
+    # else:
+    #     results = []
+
+    #     for data_item in data_list:
+    #         id = data_item['optgrp_id']
+    #         text = data_item['optgrp_name']
+    #         # result = getAnotherApiData(id)
+    #         results.append(result)
+
+    # return jsonify(results)
+
+# def getAnotherApiData(id):
+#     api_assigned_pt = f"http://testapps.teamglac.com/pl_dashboard/api/machine_optgrp.php?optgrp_id={int(id)}"
+#     response_api = requests.get(api_assigned_pt)
+
+#     if response_api.status_code == 200:
+#         data_list_api = json.loads(response_api.text)['result']
+#         print(f"==>> data_list_api: {data_list_api}")
+#         return data_list_api
+
+#     return []
+
+
+@app.route('/clientSelect')
+def clientSelect():
+    try:
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                id, 
+                port_name,
+                ip_address
+	        FROM 
+                public.connected_clients_data_tbl;
+        """)
+        rows = cursor.fetchall()
+        controllers = []
+        for row in rows:
+            controllers.append({
+                'id': row[0],
+                'text': row[1] + " " + '(' + row[2] + ')',
+
+            })
+        conn.commit()  # Commit the transaction before closing the cursor
+        cursor.close()
+        conn.close()
+        return jsonify(controllers)
+    except Exception as e:
+        conn.rollback()  # Rollback the transaction in case of an error
+        cursor.close()
+        conn.close()
+        print("Error executing query:", e)
+        return jsonify({'error': 'An error occurred while fetching controllers.'}), 500
+
+
 @app.route('/getMachinesNamesApi')
 def getMachinesNamesApi():
     url = 'http://cmms.teamglac.com/apimachine2.php'
@@ -518,34 +602,57 @@ def get_emp_id():
 
 @app.route('/matrixInput', methods=['POST'])
 def matrixInput():
-    matrix1 = request.form['matrixInput1']
-    matrix2 = request.form['matrixInput2']
-    matrix3 = request.form['matrixInput3']
-    matrix4 = request.form['matrixInput4']
-    matrix5 = request.form['matrixInput5']
-    matrix6 = request.form['matrixInput6']
+    selectID = request.form['selectID']
+    sessionID = request.form['sessionID']
+    clientID = request.form['clientID']
     dateAdded = str(datetime.now())
-    msg = "INSERT SUCCESS"
+    msg = "UPDATE SUCCESS"
 
     try:
         with psycopg2.connect(**db_config) as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO public.matrix_logs_tbl(matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, date_added) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (matrix1, matrix2, matrix3, matrix4,
-                     matrix5, matrix6, dateAdded)
-                )
+                    """
+                    UPDATE public.connected_clients_data_tbl SET matrix_maintenance_id = %s, date_updated = %s
+                    WHERE id = %s""", (selectID, dateAdded, clientID))
                 conn.commit()  # commit the transaction
+
+                cur.execute(
+                    "SELECT id, matrix1, matrix2, matrix3, matrix4, matrix5, matrix6 FROM public.matrix_maintenance_tbl WHERE id = %s",
+                    (selectID,)
+                )
+                rows = cur.fetchall()
+                resultMatrix = []
+                for row in rows:
+                    resultMatrix.append({
+                        'ID': row[0],
+                        'MATRIX1': row[1],
+                        'MATRIX2': row[2],
+                        'MATRIX3': row[3],
+                        'MATRIX4': row[4],
+                        'MATRIX5': row[5],
+                        'MATRIX6': row[6]
+                    })
+
+                # Close the cursor after fetching data but before closing the connection
+                conn.commit()
+            #     cur.close()
+
+            # # Close the connection after all database operations are done
+            # conn.close()
+
+            return jsonify({'data': resultMatrix, 'sessionID': sessionID})
+
     except Error as e:
         msg = f"ERROR: {e}"
 
-    return msg  # Return the result message
+    return msg
 
 
 @app.route('/matrixMaintenanceInputs', methods=['POST'])
 def matrixMaintenanceInputs():
     area = request.form['defaultSelect']
+    groupSelect = request.form['groupSelect']
     matrix1 = request.form['matrix1']
     matrix2 = request.form['matrix2']
     matrix3 = request.form['matrix3']
@@ -559,10 +666,10 @@ def matrixMaintenanceInputs():
         with psycopg2.connect(**db_config) as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO public.matrix_maintenance_tbl(area, time_added, matrix1, matrix2, matrix3, matrix4, matrix5, matrix6) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                    "INSERT INTO public.matrix_maintenance_tbl(area, time_added, matrix1, matrix2, matrix3, matrix4, matrix5, matrix6, group_name) "
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (area, dateAdded, matrix1, matrix2,
-                     matrix3, matrix4, matrix5, matrix6)
+                     matrix3, matrix4, matrix5, matrix6, groupSelect)
                 )
                 conn.commit()  # commit the transaction
     except Error as e:
@@ -821,22 +928,20 @@ def handle_client(data):
     saveDatabaseClient(data)
 
 
-@socketio.on('sendMatrixToClient')
+@socketio.on('sendMatrixDataToClient')
 def handle_matrix_data(data):
-    print("==>> data:", data)
+    print(f"==>> data: {data}")
+    print('go here')
+    print("==>> go here:")
 
     sessionID = data['sessionID']
+
     print("==>> sessionID:", sessionID)
 
     matrix_inputs = [data[f'matrixInput{i}'] for i in range(1, 7)]
 
     value1, value2, value3, value4, value5, value5 = matrix_inputs
     print(f"==>> matrix_inputs: {matrix_inputs}")
-
-    index_to_remove = 0
-    if index_to_remove < len(sessionID):
-        removed_value = sessionID.pop(index_to_remove)
-        print("Removed session ID value:", removed_value)
 
     # Uncomment the following line if you want to emit data back to the client
     socketio.emit('getMatrixfromServer', {

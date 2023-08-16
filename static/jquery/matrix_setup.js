@@ -2,7 +2,7 @@ var resultDatatable
 
 $('document').ready(function () {
     dataTableMatrixControllers()
-
+    getMatrixSelectData()
     $('#saveBtn').click(function () {
         dataValues()
         console.log('test')
@@ -132,6 +132,8 @@ function makeRequest(url, data) {
                 '<td><span class="badge bg-label-primary">' + row.PORT + '</span></td>' +
                 '<td><span class="badge bg-label-primary">' + row.MACHINE_SETUP + '</span></td>' +
                 '<td><span class="badge bg-label-primary">' + row.TIME_ADDED + '</span></td>' +
+                '<td><span class="badge bg-label-primary">' + row.AREA + '</span></td>' +
+                '<td><span class="badge bg-label-primary">' + row.DATE_UPDATE + '</span></td>' +
                 '<td><span class="badge bg-primary">' + row.STATUS + '</span></td>' +
                 '</tr>';
 
@@ -147,55 +149,60 @@ function makeRequest(url, data) {
     }
 }
 
+
 function dataValues() {
-    var matrixInput1 = $('#formtabs-matrix1').val()
-    var matrixInput2 = $('#formtabs-matrix2').val()
-    var matrixInput3 = $('#formtabs-matrix3').val()
-    var matrixInput4 = $('#formtabs-matrix4').val()
-    var matrixInput5 = $('#formtabs-matrix5').val()
-    var matrixInput6 = $('#formtabs-matrix6').val()
-
-    var formData = new FormData();
-    formData.append('matrixInput1', matrixInput1);
-    formData.append('matrixInput2', matrixInput2);
-    formData.append('matrixInput3', matrixInput3);
-    formData.append('matrixInput4', matrixInput4);
-    formData.append('matrixInput5', matrixInput5);
-    formData.append('matrixInput6', matrixInput6);
-
+    var selectID = $('#single-select-field').val()
 
     var checkedSessionIDs = [];
+    var clientID = [];
 
     $('#matrix_setup_tbl_idTbody input[type="checkbox"]').each(function () {
         var sessionID = $(this).closest('tr').find('td:eq(3)').text(); // Update index to match the correct column
+        var clientId = $(this).closest('tr').find('td:eq(1)').text(); // Update index to match the correct column
+        console.log("🚀 ~ file: matrix_setup.js:162 ~ clientID:", clientID)
         console.log("🚀 ~ file: matrix_setup.js:171 ~ sessionID:", sessionID)
         checkedSessionIDs.push(sessionID);
+        clientID.push(clientId);
     });
 
-    if (checkedSessionIDs.length === 0) {
+    if (checkedSessionIDs.length === 0 || clientID.length === 0) {
         console.log("No checkboxes are checked.");
     } else {
-        console.log("Checked Session IDs:", checkedSessionIDs);
+        console.log("Checked Session IDs:", checkedSessionIDs, clientID);
     }
 
-    sendMatrixToClient(matrixInput1, matrixInput2, matrixInput3, matrixInput4, matrixInput5, matrixInput6, checkedSessionIDs)
+
+    var formData = new FormData();
+    formData.append('selectID', selectID);
+    formData.append('clientID', clientID);
+    formData.append('sessionID', checkedSessionIDs);
+
+
     matrixAjaxRequest('/matrixInput', formData)
 }
 
 
-function sendMatrixToClient(matrixInput1, matrixInput2, matrixInput3, matrixInput4, matrixInput5, matrixInput6, sessionID) {
-    var socket = io.connect();
-    var data = {
-        'matrixInput1': matrixInput1,
-        'matrixInput2': matrixInput2,
-        'matrixInput3': matrixInput3,
-        'matrixInput4': matrixInput4,
-        'matrixInput5': matrixInput5,
-        'matrixInput6': matrixInput6,
-        'sessionID': sessionID,
-    };
+function getMatrixSelectData() {
+    $.ajax({
+        url: "/matrixSelect",
+        type: "GET",
+        success: function (response) {
+            result = response['data']
+            console.log("🚀 ~ file: matrix_input.js:88 ~ getMatrixSelectData ~ result:", result)
+            var options = ''
+            var select = $("#single-select-field");
+            select.empty();
 
-    socket.emit('sendMatrixToClient', data);
+            $('#single-select-field').select2({
+                dropdownParent: $('#matrixShowModal'),
+                width: '100%',
+                data: result
+            });
+        },
+        error: function (error) {
+            console.log("Error in API request:", error);
+        }
+    });
 }
 
 function matrixAjaxRequest(url, data) {
@@ -220,6 +227,12 @@ function matrixAjaxRequest(url, data) {
 
         },
         success: function (response) {
+
+            sendMatrixToClient(response)
+
+
+            $('#matrixShowModal').modal('hide')
+
             Swal.fire(
                 'Saved!',
                 'Your file has been saved.',
@@ -248,6 +261,35 @@ function matrixAjaxRequest(url, data) {
         $('#waitMeContainerMatrix').waitMe('hide');
 
     })
+}
+
+function sendMatrixToClient(response) {
+
+    var matrixData = response.data[0]
+    console.log("🚀 ~ file: matrix_setup.js:269 ~ sendMatrixToClient ~ matrixData:", matrixData)
+    var matrixInput1 = matrixData['MATRIX1']
+    var matrixInput2 = matrixData['MATRIX2']
+    var matrixInput3 = matrixData['MATRIX3']
+    var matrixInput4 = matrixData['MATRIX4']
+    var matrixInput5 = matrixData['MATRIX5']
+    var matrixInput6 = matrixData['MATRIX6']
+    console.log("🚀 ~ file: matrix_setup.js:276 ~ sendMatrixToClient ~ matrixInput6:", matrixInput6)
+    var sessionID = response.sessionID
+
+    var socket = io.connect();
+    var data = {
+        'matrixInput1': matrixInput1,
+        'matrixInput2': matrixInput2,
+        'matrixInput3': matrixInput3,
+        'matrixInput4': matrixInput4,
+        'matrixInput5': matrixInput5,
+        'matrixInput6': matrixInput6,
+        'sessionID': sessionID,
+    };
+    console.log("🚀 ~ file: matrix_setup.js:279 ~ sendMatrixToClient ~ data:", data)
+
+
+    socket.emit('sendMatrixDataToClient', data);
 }
 
 

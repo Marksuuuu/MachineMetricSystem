@@ -38,7 +38,7 @@
                     </li>
                   </ul>
                   <div class="tab-content">
-                    <div class="tab-pane fade active show" id="navs-top-home" role="tabpanel">
+                    <!--  <div class="tab-pane fade active show" id="navs-top-home" role="tabpanel">
                       <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Matrix Assign</span></h4>
                       <div class="card">
                         <div class="card-datatable text-nowrap">
@@ -61,36 +61,35 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="tab-pane fade" id="navs-top-profile" role="tabpanel">
-                      <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Matrix Input</span></h4>
-                      <button type="button" class="btn btn-primary float-right mb-5" id="matrixInputBtn">ADD MATRIX</button>
-                      <div class="card">
-                        <div class="card-datatable text-nowrap">
-                          <div id="matrix_maintainance_div_data" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                            <div class="table-responsive">
-                              <table class="table table-bordered dataTable no-footer" id="matrix_maintainance_tbl_data" aria-describedby="matrix_setup_tbl_info" style="width: 1390px;">
-                                <thead>
-                                  <tr>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">ID</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">AREA</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
-                                    <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">STATUS</th>
-                                  </tr>
-                                </thead>
-                                <tbody></tbody>
-                              </table>
-                            </div>
+                    </div> -->
+                    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Matrix Input</span></h4>
+                    <button type="button" class="btn btn-primary float-right mb-5" id="matrixInputBtn">ADD MATRIX</button>
+                    <div class="card">
+                      <div class="card-datatable text-nowrap">
+                        <div id="matrix_maintainance_div_data" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                          <div class="table-responsive">
+                            <table class="table table-bordered dataTable no-footer" id="matrix_maintainance_tbl_data" aria-describedby="matrix_setup_tbl_info" style="width: 1390px;">
+                              <thead>
+                                <tr>
+                                  <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">ID</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">AREA</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">MATRIX</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">STATUS</th>
+                                </tr>
+                              </thead>
+                              <tbody></tbody>
+                            </table>
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div class="tab-pane fade" id="navs-top-profile" role="tabpanel"></div>
                     <div class="tab-pane fade" id="navs-top-messages" role="tabpanel">
                       <p>Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies cupcake gummi bears cake chocolate.</p>
                       <p class="mb-0">Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly jelly-o tart brownie jelly.</p>
@@ -110,6 +109,19 @@
                     <div class="modal-body">
                       <div class="col-xxl">
                         <form>
+                          <div class="row mb-3">
+                            <label for="defaultSelect" class="col-sm-2 col-form-label">Area</label>
+                            <div class="col-sm-10">
+                              <select id="areaSelect" class="form-select"></select>
+                            
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="groupSelect" class="col-sm-2 col-form-label">Group</label>
+                            <div class="col-sm-10">
+                              <select id="putangInangSelect" class="form-select"></select>
+                            </div>
+                          </div>
                           <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
                             <div class="col-sm-10">
@@ -146,19 +158,6 @@
                               <input type="text" class="form-control" id="basic-default-matrix6" placeholder="ACME Inc." />
                             </div>
                           </div>
-                          <div class="row mb-3">
-                            <label for="defaultSelect" class="col-sm-2 col-form-label">Area</label>
-                            <div class="col-sm-10">
-                              <select id="defaultSelect" class="form-select" placeholder="ACME Inc.">
-                                <option></option>
-                                <option value="wirebond">WIREBOND</option>
-                                <option value="eol1">END OF LINE 1</option>
-                                <option value="eol2">END OF LINE 2</option>
-                                <option value="dieattached">DIE ATTACH</option>
-                                <option value="mold">MOLD</option>
-                              </select>
-                            </div>
-                          </div>
                         </form>
                       </div>
                     </div>
@@ -186,14 +185,7 @@
                     <div class="table-responsive">
                       <div class="mb-4">
                         <div class="mt-2 mb-3">
-                          <select class="form-select form-select-lg sample" id="single-select-field" data-placeholder="Choose one thing">
-                            <option></option>
-                            <option>Reactive</option>
-                            <option>Solution</option>
-                            <option>Conglomeration</option>
-                            <option>Algoritm</option>
-                            <option>Holistic</option>
-                          </select>
+                          <select class="form-select form-select-lg sample" id="single-select-field" data-placeholder="Choose one thing"></select>
                         </div>
                       </div>
                       <div class="divider mt-5">
@@ -213,6 +205,8 @@
                             <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">PORT NAME</th>
                             <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="" style="width: 230px;">MACHINE</th>
                             <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
+                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">DATE UPDATE</th>
+                            <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">AREA</th>
                             <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl_id" rowspan="1" colspan="1" aria-label="">STATUS</th>
                           </tr>
                         </thead>
