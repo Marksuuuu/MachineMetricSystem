@@ -66,25 +66,26 @@ function AjaxSelectDataRequest(url, data) {
             $('#defaultSelect').select2().html();
         },
         success: function (response) {
-            var formattedData = [];
+            console.log("🚀 ~ file: matrix_input.js:69 ~ AjaxSelectDataRequest ~ response:", response)
+            // var formattedData = [];
 
-            if (Array.isArray(response.data) && response.data == 1) {
-                response = [{ id: 'no-data', text: 'No Data Available' }];
-                formattedData = response.data.map(function (item) {
-                    return { id: item, text: item };
-                });
-            } else {
-                formattedData = response.data.map(function (item) {
-                    return { id: item, text: item };
-                });
-            }
+            // if (Array.isArray(response.data) && response.data == 1) {
+            //     response = [{ id: 'no-data', text: 'No Data Available' }];
+            //     formattedData = response.data.map(function (item) {
+            //         return { id: item, text: item };
+            //     });
+            // } else {
+            //     formattedData = response.data.map(function (item) {
+            //         return { id: item, text: item };
+            //     });
+            // }
 
-            $('#putangInangSelect').select2({
-                dropdownParent: $('#matrixInputModal'),
-                width: '100%',
-                data: formattedData,
-                multiple:true
-            });
+            // $('#putangInangSelect').select2({
+            //     dropdownParent: $('#matrixInputModal'),
+            //     width: '100%',
+            //     data: formattedData,
+            //     // multiple:true
+            // });
         },
 
         error: function (jqXHR, textStatus, errorThrown) {
@@ -145,12 +146,7 @@ function matrixDatatable() {
             { data: 'id' },
             { data: 'area' },
             { data: 'time_added' },
-            { data: 'matrix1' },
-            { data: 'matrix2' },
-            { data: 'matrix3' },
-            { data: 'matrix4' },
-            { data: 'matrix5' },
-            { data: 'matrix6' },
+            { data: 'group_name' },
             {
                 data: null,
                 className: 'text-center',
@@ -163,6 +159,8 @@ function matrixDatatable() {
                     } else {
                         buttonHtml += ' <div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
                             '<button type="button" class="btn btn-outline-danger bx bx-trash delete-btn" data-id="' + row.id + '"></button>' +
+                            '<button type="button" class="btn btn-outline-success bx bx-sync sync-btn" data-id="' + row.id + '" data-grp-name = "' + row.group_name + '"></button>' +
+                            '<button type="button" class="btn btn-outline-primary bx bx-pencil delete-btn" data-id="' + row.id + '"></button>' +
                             '</div>';
                     }
 
@@ -174,8 +172,89 @@ function matrixDatatable() {
         order: [[0, 'desc']]
     });
 
+    matrix_tbl.on('click', '.sync-btn', function () {
+        var id = $(this).attr('data-id')
+        var grp_name = $(this).attr('data-grp-name')
+        console.log("🚀 ~ file: matrix_input.js:177 ~ grp_name:", grp_name)
+
+        var formData = new FormData()
+
+        formData.append('grp_name', grp_name)
+        SyncRequestAjax('/SyncRequestAjax', formData)
+
+    })
+
+
 }
 
+function SyncRequestAjax(url, data) {
+    $.ajax({
+        url: url,
+        method: 'POST',
+        data: data,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+        },
+        success: function (response) {
+            sendMatrixToClient(response)
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 0) {
+                alert('No internet connection.')
+            } else if (jqXHR.status === 404) {
+                alert('Requested page not found [404].')
+            } else if (jqXHR.status === 500) {
+                alert('Internal Server Error [500].')
+            } else if (textStatus === 'parsererror') {
+                alert('Requested JSON parsing failed.')
+            } else if (textStatus === 'timeout') {
+                alert('Time out error.')
+            } else if (textStatus === 'abort') {
+                alert('Ajax request aborted.')
+            } else {
+                alert('Uncaught Error: ' + errorThrown)
+            }
+        }
+    }).done(function () {
+    })
+}
+
+
+function sendMatrixToClient(response) {
+    console.log("🚀 ~ file: matrix_input.js:226 ~ sendMatrixToClient ~ response:", response)
+
+
+
+    var sessionIDS = [];
+    if (Array.isArray(response.data)) {
+        sessionIDS = response.data.map(function (item) {
+            return item.session;
+        });
+    }
+
+
+    var matrixValues = [];
+
+    if (Array.isArray(response.matrix)) {
+        matrixValues = response.matrix.map(function (matrixItem) {
+            return Object.values(matrixItem);
+        });
+    }
+    console.log("🚀 ~ file: matrix_input.js:239 ~ sendMatrixToClient ~ matrixValues:", matrixValues)
+
+    console.log("🚀 ~ file: matrix_input.js:231 ~ sessionIDS ~ sessionIDS:", sessionIDS)
+
+    var socket = io.connect();
+    var data = {
+        'sessionID': sessionIDS,
+        'matrix': matrixValues
+    };
+
+
+    socket.emit('sendMatrixDataToClient', data);
+}
 
 
 function submitMatrixInput() {
@@ -185,10 +264,11 @@ function submitMatrixInput() {
     var matrix4 = $('#basic-default-matrix4').val()
     var matrix5 = $('#basic-default-matrix5').val()
     var matrix6 = $('#basic-default-matrix6').val()
-    var defaultSelect = $('#defaultSelect').val()
+    var defaultSelect = $('#areaSelect').val()
+    console.log("🚀 ~ file: matrix_input.js:189 ~ submitMatrixInput ~ defaultSelect:", defaultSelect)
     var putangInangSelect = $('#putangInangSelect').val()
     console.log("🚀 ~ file: matrix_input.js:190 ~ submitMatrixInput ~ putangInangSelect:", putangInangSelect)
-    
+
     // console.log("🚀 ~ file: matrix_input.js:177 ~ submitMatrixInput ~ defaultSelect:", defaultSelect)
 
 

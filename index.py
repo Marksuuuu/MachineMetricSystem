@@ -346,12 +346,7 @@ def matrixData():
                 id, 
                 area, 
                 time_added, 
-                matrix1, 
-                matrix2, 
-                matrix3, 
-                matrix4, 
-                matrix5, 
-                matrix6
+                group_name
 	        FROM 
                 public.matrix_maintenance_tbl;
         """)
@@ -362,12 +357,7 @@ def matrixData():
                 'id': row[0],
                 'area': row[1],
                 'time_added': row[2],
-                'matrix1': row[3],
-                'matrix2': row[4],
-                'matrix3': row[5],
-                'matrix4': row[6],
-                'matrix5': row[7],
-                'matrix6': row[8]
+                'group_name': row[3]
             })
         conn.commit()  # Commit the transaction before closing the cursor
         cursor.close()
@@ -425,7 +415,7 @@ def requestDataFromApi():
     data = request.form['selectedValue']
     with open('cmms-dummy-data.json', 'r') as json_file:
         json_data = json.load(json_file)
-        
+
         if data in json_data['data']['area']:
             wirebond_data = json_data['data']
             dataResult = list(wirebond_data['optgrp_name'].keys())
@@ -435,6 +425,129 @@ def requestDataFromApi():
 
         return jsonify({'data': dataResult})
 
+
+@app.route('/SyncRequestAjax', methods=['POST'])
+def sync_request_ajax():
+    try:
+        grp_name = request.form['grp_name']
+        print(f"==>> grp_name: {grp_name}")
+
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                matrix1, 
+                matrix2, 
+                matrix3, 
+                matrix4, 
+                matrix5, 
+                matrix6 
+            FROM 
+                public.matrix_maintenance_tbl
+            WHERE 
+                group_name = %s""", (grp_name,))
+        rows = cursor.fetchall()
+        matrix = []
+        for row in rows:
+            matrix.append({
+                'matrix1': row[0],
+                'matrix2': row[1],
+                'matrix3': row[2],
+                'matrix4': row[3],
+                'matrix5': row[4],
+                'matrix6': row[5]
+            })
+        print(f"==>> matrix: {matrix}")
+        
+        with open('cmms-dummy-data.json', 'r') as json_file:
+            json_data = json.load(json_file)
+
+        if grp_name in json_data['data']['optgrp_name']:
+            matching_entries = json_data['data']['optgrp_name'][grp_name]
+            
+            conn = psycopg2.connect(**db_config)
+            cursor = conn.cursor()
+
+            query = "SELECT session, machine_setup FROM public.connected_clients_data_tbl WHERE machine_setup = ANY(%s)"
+
+            mach201_ids = [entry.get('MACH201_ID') for entry in matching_entries]
+
+            cursor.execute(query, (mach201_ids,))
+            query_results = cursor.fetchall()
+
+            result_data = [{'session': row[0]} for row in query_results]
+        else:
+            result_data = []
+
+        return jsonify({'data': result_data, 'matrix': matrix})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+
+# @app.route('/SyncRequestAjax', methods=['POST'])
+# def sync_request_ajax():
+#     try:
+#         grp_name = request.form['grp_name']
+
+#         with open('cmms-dummy-data.json', 'r') as json_file:
+#             json_data = json.load(json_file)
+
+#         if grp_name in json_data['data']['optgrp_name']:
+#             matching_entries = json_data['data']['optgrp_name'][grp_name]
+#             filtered_data = []
+
+#             conn = psycopg2.connect(**db_config)
+#             cursor = conn.cursor()
+#             cursor.execute("""SELECT machine_setup FROM public.connected_clients_data_tbl""")
+#             rows = cursor.fetchall()
+#             search_value = 0
+#             for row in rows:
+#                 search_value = row[0]
+#                 print(f"==>> search_value: {search_value}")
+#                 search_criteria = 'MACH201_ID'
+#                 for entry in matching_entries:
+#                     if entry.get(search_criteria) == search_value:
+#                         filtered_data.append(entry)
+
+#             data_result = filtered_data
+#             print(f"==>> data_result: {data_result}")
+            
+#             # Extract MACH201_ID values from data_result
+#             mach201_ids = [entry.get('MACH201_ID') for entry in data_result]
+#             mach201_ids_str = ','.join(str(id) for id in mach201_ids)  # Convert to string
+#             resultHere = f"""SELECT session, machine_setup FROM public.connected_clients_data_tbl where machine_setup IN ({mach201_ids_str})"""
+            
+#             # Execute the query and fetch results
+#             cursor.execute(resultHere)
+#             print(f"==>> resultHere: {resultHere}")
+#             query_results = cursor.fetchall()
+#             print(f"==>> query_results: {query_results}")
+
+#             # Convert query_results to a list of dictionaries
+#             result_data = [{'session': row[0], 'machine_setup': row[1]} for row in query_results]
+#         else:
+#             result_data = []
+
+#         return jsonify({'data': result_data})
+#     except Exception as e:
+#         return jsonify({'error': str(e)})
+
+
+# @app.route('/SyncRequestAjax', methods=['POST'])
+# def SyncRequestAjax():
+#     grp_name = request.form['grp_name']
+
+#     with open('cmms-dummy-data.json', 'r') as json_file:
+#         json_data = json.load(json_file)
+
+#         if grp_name in json_data['data']['optgrp_name']:
+#             matching_entries = json_data['data']['optgrp_name'][grp_name]
+#             dataResult = matching_entries
+#             print(f"==>> dataResult: {dataResult}")
+#         else:
+#             dataResult = []
+
+#         return jsonify({'data': dataResult})
 
 
 # Function to search for optgrp_names
@@ -652,6 +765,7 @@ def matrixInput():
 @app.route('/matrixMaintenanceInputs', methods=['POST'])
 def matrixMaintenanceInputs():
     area = request.form['defaultSelect']
+    print(f"==>> area: {area}")
     groupSelect = request.form['groupSelect']
     matrix1 = request.form['matrix1']
     matrix2 = request.form['matrix2']
@@ -930,22 +1044,20 @@ def handle_client(data):
 
 @socketio.on('sendMatrixDataToClient')
 def handle_matrix_data(data):
-    print(f"==>> data: {data}")
-    print('go here')
-    print("==>> go here:")
+    session_ids = data['sessionID']
+    matrix_values = data['matrix']
+    
+    for session_id in session_ids:
+        print(f"Session ID: {session_id}")
+    
+    for matrix_item in matrix_values:
+        for value in matrix_item:
+            print(f"Matrix Value: {value}")
+    
+    # Emit the entire matrix_values array back to each client
+    for session_id in session_ids:
+        socketio.emit('getMatrixfromServer', {'dataToPass': matrix_values}, to=session_id)
 
-    sessionID = data['sessionID']
-
-    print("==>> sessionID:", sessionID)
-
-    matrix_inputs = [data[f'matrixInput{i}'] for i in range(1, 7)]
-
-    value1, value2, value3, value4, value5, value5 = matrix_inputs
-    print(f"==>> matrix_inputs: {matrix_inputs}")
-
-    # Uncomment the following line if you want to emit data back to the client
-    socketio.emit('getMatrixfromServer', {
-                  'dataToPass': matrix_inputs}, to=sessionID)
 
 
 @socketio.on('sendDataToClient')

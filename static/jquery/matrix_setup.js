@@ -45,6 +45,8 @@ function dataTableMatrixControllers() {
                     } else {
                         buttonHtml += ' <div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
                             '<button type="button" class="btn btn-outline-info bx bx-list-ol show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '" show-controller="' + row.controller_name + '"></button>' +
+                            '<button type="button" class="btn btn-outline-info bx bx-sync show-btn" data-id="' + row.id + '" data-ip="' + row.ip_address + '" show-controller="' + row.controller_name + '"></button>' +
+
                             '</div>';
                     }
 
