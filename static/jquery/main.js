@@ -30,7 +30,7 @@ $('document').ready(function () {
                 })
 
             },
-            // idle: 3000,
+
             idle: 1800000,
             keepTracking: true,
             startAtIdle: true
@@ -147,7 +147,7 @@ function dataTableController() {
 
         var formData = new FormData();
         formData.append('controllerIp', controllerIp)
-        makeAjaxRequestShow('/showAll', formData)
+        makeAjaxRequestShow('/showAllMatrix', formData)
     })
 
     table.on('click', '#button-addon2', function () {
@@ -224,18 +224,18 @@ function successResponse(response) {
         var rowId = $(this).data('id');
         var machineSetupCell = $(this).closest('tr').find('td:eq(4)');
         var machineSetupBtn = $(this).closest('tr').find('td:eq(7)');
-        // var area = $(this).closest('tr').find('td:eq(7)');
 
-        // var areaField = $('<select class="form-control" id="area_var"></select>');
-        // area.empty().append(areaField);
 
-        // var areaOptions = ['Die Prep', 'Die Attach', 'Wirebond', 'Mold', 'EOL1', 'EOL2'];
-        // areaOptions.forEach(function (option) {
-        //     var optionElement = $('<option></option>').text(option);
-        //     areaField.append(optionElement);
-        // });
-        // areaField.val(area.text());
-        // area.empty().append(areaField);
+
+
+
+
+
+
+
+
+
+
 
         var selectMachineName = $('<select class="form-control" id="machine_name_var"></select>');
         machineSetupCell.empty().append(selectMachineName);
@@ -245,6 +245,8 @@ function successResponse(response) {
         machineSetupBtn.empty().append(btnSave);
 
         $('#dataTableVar').on('click', '.btn-save', function () {
+            var machno = $('#machine_name_var option:selected').attr('data-machno');
+            console.log("🚀 ~ file: main.js:249 ~ machno:", machno)
             var id = $(this).closest('tr').find('td:eq(0)').text();
             var sessionID = $(this).closest('tr').find('td:eq(2)').text();
             var selectedArea = $('#area_var').val();
@@ -256,13 +258,14 @@ function successResponse(response) {
             formData.append('selectedArea', selectedArea);
             formData.append('selectedMachineName', selectedMachineName);
             formData.append('sessionID', sessionID);
+            formData.append('machno', machno);
 
-            // var formRequest = new FormData();
-            // formRequest.append('mach201_id', selectedMachineName)
+
+
 
             makeAjaxRequestData('/updateClientData', formData);
-            // makeApiRequest('/fetchApiData', formRequest)
-            // passDataToClient(sessionID, selectedMachineName);
+
+
         });
 
     });
@@ -278,7 +281,7 @@ function successResponse(response) {
                 select.empty();
 
                 $.each(result, function (index, name) {
-                    select.append($('<option></option>').val(name.MACH201_ID).html(name.MACHNO + " ( " + name.CLASS + " )"));
+                    select.append($('<option data-machno="' + name.MACHNO + '"></option>').val(name.MACH201_ID).html(name.MACHNO + " ( " + name.CLASS + " )"));
                 });
 
                 select.select2({
@@ -303,13 +306,14 @@ function makeAjaxRequestData(url, data) {
         beforeSend: function () {
         },
         success: function (response) {
+            console.log("🚀 ~ file: main.js:309 ~ makeAjaxRequestData ~ response:", response)
             console.log("🚀 ~ file: main.js:303 ~ makeAjaxRequestData ~ response:", response.sessionID)
             console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequestData ~ response:", response.data)
-            // result = response.data
-            // console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequestData ~ response:", result[0])
-            // console.log("🚀 ~ file: main.js:302 ~ makeAjaxRequestData ~ response:", result[1])
+
+
+
             table.ajax.reload();
-            // responseResponse(response)
+
             passDataToClient(response)
 
         },
@@ -336,15 +340,18 @@ function makeAjaxRequestData(url, data) {
 
 
 function passDataToClient(response) {
+    console.log("🚀 ~ file: main.js:342 ~ passDataToClient ~ response:", response)
     var socket = io.connect();
     dataToPass = response.data
     sessionID = response.sessionID
+    machno = response.machno
     console.log("🚀 ~ file: main.js:343 ~ passDataToClient ~ sessionID:", sessionID)
     data = dataToPass[0]
     console.log("🚀 ~ file: main.js:345 ~ passDataToClient ~ data:", data)
     var data = {
         sessionID: sessionID,
-        dataToPass: dataToPass
+        dataToPass: dataToPass,
+        machno: machno
     };
     console.log("🚀 ~ file: main.js:346 ~ passDataToClient ~ data:", data)
 

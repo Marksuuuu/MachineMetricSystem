@@ -30,6 +30,36 @@
                     "area_name": "Wirebond",
                     "optgrp_name": "DIE \/ WIRE COAT"
                 }
+            ],
+            "Die Prep": [
+                {
+                    "optgrp_id": "47",
+                    "id": "1",
+                    "sbu_name": "TOS",
+                    "area_name": "Die Prep",
+                    "optgrp_name": "WAFER SAW"
+                },
+                {
+                    "optgrp_id": "120",
+                    "id": "2",
+                    "sbu_name": "TOS",
+                    "area_name": "Die Prep",
+                    "optgrp_name": "DIE PLATE"
+                },
+                {
+                    "optgrp_id": "42",
+                    "id": "3",
+                    "sbu_name": "TOS",
+                    "area_name": "Die Prep",
+                    "optgrp_name": "2ND OPTICAL INSPECTION"
+                },
+                {
+                    "optgrp_id": "1",
+                    "id": "38",
+                    "sbu_name": "SOT",
+                    "area_name": "Die Prep",
+                    "optgrp_name": "DIE ATTACH"
+                }
             ]
         },
         "optgrp_name": {
@@ -900,6 +930,966 @@
                     "OPERATION": "75",
                     "MACH201_ID": "2171",
                     "MTYPE_CLASS": "P-F\/OVEN"
+                }
+            ],
+            "WAFER SAW": [
+                {
+                    "ID": "1883",
+                    "MACHNO": "DAD 3350-01",
+                    "OPERATION": "47",
+                    "MACH201_ID": "2423",
+                    "MTYPE_CLASS": "P-DAD 3350"
+                },
+                {
+                    "ID": "1998",
+                    "MACHNO": "DCS 1440-01",
+                    "OPERATION": "47",
+                    "MACH201_ID": "2424",
+                    "MTYPE_CLASS": "P-DCS 1440"
+                },
+                {
+                    "ID": "1941",
+                    "MACHNO": "OV-031",
+                    "OPERATION": "47",
+                    "MACH201_ID": "1788",
+                    "MTYPE_CLASS": "P-E\/OVEN"
+                },
+                {
+                    "ID": "1728",
+                    "MACHNO": "WC-001",
+                    "OPERATION": "47",
+                    "MACH201_ID": "1763",
+                    "MTYPE_CLASS": "D-Ultratech"
+                },
+                {
+                    "ID": "1729",
+                    "MACHNO": "WC-002",
+                    "OPERATION": "47",
+                    "MACH201_ID": "1764",
+                    "MTYPE_CLASS": "D-Ultratech"
+                },
+                {
+                    "ID": "2111",
+                    "MACHNO": "WC-003",
+                    "OPERATION": "47",
+                    "MACH201_ID": "2092",
+                    "MTYPE_CLASS": "H-Ultratech"
+                },
+                {
+                    "ID": "2110",
+                    "MACHNO": "WC-004",
+                    "OPERATION": "47",
+                    "MACH201_ID": "2091",
+                    "MTYPE_CLASS": "H-Ultratech"
+                },
+                {
+                    "ID": "1568",
+                    "MACHNO": "WS-005",
+                    "OPERATION": "47",
+                    "MACH201_ID": "1330",
+                    "MTYPE_CLASS": "D-DISCO SAW"
+                },
+                {
+                    "ID": "1569",
+                    "MACHNO": "WS-006",
+                    "OPERATION": "47",
+                    "MACH201_ID": "1331",
+                    "MTYPE_CLASS": "D-DISCO SAW"
+                },
+                {
+                    "ID": "1882",
+                    "MACHNO": "WS-011",
+                    "OPERATION": "47",
+                    "MACH201_ID": "2334",
+                    "MTYPE_CLASS": "P-DAD 341"
+                }
+            ],
+            "DIE PLATE": [
+                {
+                    "ID": "2077",
+                    "MACHNO": "LPS-01",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2651",
+                    "MTYPE_CLASS": "Service Only"
+                },
+                {
+                    "ID": "1809",
+                    "MACHNO": "VLFH-058",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2072",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1812",
+                    "MACHNO": "VLFH-090",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2327",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1818",
+                    "MACHNO": "VLFH-091",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2329",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1821",
+                    "MACHNO": "VLFH-092",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2330",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1815",
+                    "MACHNO": "VLFH-093",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2328",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1824",
+                    "MACHNO": "VLFH-094",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2331",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1827",
+                    "MACHNO": "VLFH-095",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2332",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1833",
+                    "MACHNO": "VLFH-099",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2341",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1830",
+                    "MACHNO": "VLFH-92",
+                    "OPERATION": "120",
+                    "MACH201_ID": "2333",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                }
+            ],
+            "2ND OPTICAL INSPECTION": [
+                {
+                    "ID": "1701",
+                    "MACHNO": "2100-H001",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1713",
+                    "MTYPE_CLASS": "H-AMI 2100"
+                },
+                {
+                    "ID": "1702",
+                    "MACHNO": "2100-H003",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1714",
+                    "MTYPE_CLASS": "H-AMI 2100"
+                },
+                {
+                    "ID": "1991",
+                    "MACHNO": "EG-01",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2172",
+                    "MTYPE_CLASS": "H-AMI 2100"
+                },
+                {
+                    "ID": "2084",
+                    "MACHNO": "HPS-01",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2650",
+                    "MTYPE_CLASS": "Service Only"
+                },
+                {
+                    "ID": "2071",
+                    "MACHNO": "LPS-01",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2651",
+                    "MTYPE_CLASS": "Service Only"
+                },
+                {
+                    "ID": "2086",
+                    "MACHNO": "UCSM-01",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2655",
+                    "MTYPE_CLASS": "Service Only"
+                },
+                {
+                    "ID": "1572",
+                    "MACHNO": "VLFH-001",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1398",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1575",
+                    "MACHNO": "VLFH-008",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1403",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "2104",
+                    "MACHNO": "VLFH-009",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1404",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1869",
+                    "MACHNO": "VLFH-015",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1446",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1581",
+                    "MACHNO": "VLFH-025",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1412",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1584",
+                    "MACHNO": "VLFH-026",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1413",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1871",
+                    "MACHNO": "VLFH-032",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1447",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1587",
+                    "MACHNO": "VLFH-034",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1415",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1590",
+                    "MACHNO": "VLFH-053",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1426",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1502",
+                    "MACHNO": "VLFH-058",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2072",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1593",
+                    "MACHNO": "VLFH-059",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1430",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1596",
+                    "MACHNO": "VLFH-062",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1433",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1599",
+                    "MACHNO": "VLFH-063",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1434",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1602",
+                    "MACHNO": "VLFH-064",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1435",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1834",
+                    "MACHNO": "VLFH-073",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1438",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1837",
+                    "MACHNO": "VLFH-074",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1439",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1840",
+                    "MACHNO": "VLFH-076",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1440",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1843",
+                    "MACHNO": "VLFH-078",
+                    "OPERATION": "42",
+                    "MACH201_ID": "1442",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1810",
+                    "MACHNO": "VLFH-090",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2327",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1816",
+                    "MACHNO": "VLFH-091",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2329",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1819",
+                    "MACHNO": "VLFH-092",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2330",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1813",
+                    "MACHNO": "VLFH-093",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2328",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1822",
+                    "MACHNO": "VLFH-094",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2331",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1825",
+                    "MACHNO": "VLFH-095",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2332",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1873",
+                    "MACHNO": "VLFH-096",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2335",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1877",
+                    "MACHNO": "VLFH-097",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2338",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1875",
+                    "MACHNO": "VLFH-098",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2336",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1831",
+                    "MACHNO": "VLFH-099",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2341",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1865",
+                    "MACHNO": "VLFH-100",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2343",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1879",
+                    "MACHNO": "VLFH-101",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2342",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1867",
+                    "MACHNO": "VLFH-102",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2361",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1828",
+                    "MACHNO": "VLFH-92",
+                    "OPERATION": "42",
+                    "MACH201_ID": "2333",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                }
+            ],
+            "DIE ATTACH": [
+                {
+                    "ID": "1920",
+                    "MACHNO": "3200-007",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1256",
+                    "MTYPE_CLASS": "H-AMI 3200"
+                },
+                {
+                    "ID": "1921",
+                    "MACHNO": "3200-008",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1257",
+                    "MTYPE_CLASS": "H-AMI 3200"
+                },
+                {
+                    "ID": "1911",
+                    "MACHNO": "BTU-003",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1581",
+                    "MTYPE_CLASS": "P-FURNACE"
+                },
+                {
+                    "ID": "1508",
+                    "MACHNO": "BTU-006",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1641",
+                    "MTYPE_CLASS": "P-FURNACE"
+                },
+                {
+                    "ID": "1511",
+                    "MACHNO": "BTU-03",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2057",
+                    "MTYPE_CLASS": "H-BTU"
+                },
+                {
+                    "ID": "1510",
+                    "MACHNO": "BTU-04",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2056",
+                    "MTYPE_CLASS": "H-BTU"
+                },
+                {
+                    "ID": "1500",
+                    "MACHNO": "CENTRO-02",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2261",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "1501",
+                    "MACHNO": "CENTRO-03",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2279",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "2005",
+                    "MACHNO": "CENTRO-04",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2286",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "1516",
+                    "MACHNO": "CENTRO-05",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2309",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "1515",
+                    "MACHNO": "CENTRO-06",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2305",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "2021",
+                    "MACHNO": "DEG-1",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2314",
+                    "MTYPE_CLASS": "P-DEGASSER"
+                },
+                {
+                    "ID": "2050",
+                    "MACHNO": "DEG-2",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2415",
+                    "MTYPE_CLASS": "P-DEGASSER"
+                },
+                {
+                    "ID": "2008",
+                    "MACHNO": "DG-05",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2294",
+                    "MTYPE_CLASS": "P-DEGREASER"
+                },
+                {
+                    "ID": "1512",
+                    "MACHNO": "ESEC-001",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2058",
+                    "MTYPE_CLASS": "H-ESEC"
+                },
+                {
+                    "ID": "1504",
+                    "MACHNO": "ESEC-002",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1216",
+                    "MTYPE_CLASS": "H-ESEC"
+                },
+                {
+                    "ID": "1509",
+                    "MACHNO": "ESEC-01",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1889",
+                    "MTYPE_CLASS": "P-Esec"
+                },
+                {
+                    "ID": "1513",
+                    "MACHNO": "ESEC-02",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2164",
+                    "MTYPE_CLASS": "P-Esec"
+                },
+                {
+                    "ID": "1514",
+                    "MACHNO": "ESEC-03",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2165",
+                    "MTYPE_CLASS": "P-Esec"
+                },
+                {
+                    "ID": "2195",
+                    "MACHNO": "ESEC-04",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2792",
+                    "MTYPE_CLASS": "P-Esec"
+                },
+                {
+                    "ID": "2015",
+                    "MACHNO": "HHV-001",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2312",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "2036",
+                    "MACHNO": "HHV-002",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2339",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "2039",
+                    "MACHNO": "HHV-003",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2403",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "2148",
+                    "MACHNO": "LL-01",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2658",
+                    "MTYPE_CLASS": "Service Only"
+                },
+                {
+                    "ID": "1708",
+                    "MACHNO": "MD-01",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1725",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1709",
+                    "MACHNO": "MD-02",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1726",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1710",
+                    "MACHNO": "MD-03",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1727",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1711",
+                    "MACHNO": "MD-04",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1728",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1712",
+                    "MACHNO": "MD-05",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1729",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1713",
+                    "MACHNO": "MD-06",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1730",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1714",
+                    "MACHNO": "MD-07",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1731",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1715",
+                    "MACHNO": "MD-08",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1732",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1716",
+                    "MACHNO": "MD-09",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1733",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1717",
+                    "MACHNO": "MD-10",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1734",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1703",
+                    "MACHNO": "MD-11",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1735",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1704",
+                    "MACHNO": "MD-12",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1736",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1705",
+                    "MACHNO": "MD-13",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1737",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1706",
+                    "MACHNO": "MD-14",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1738",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1707",
+                    "MACHNO": "MD-15",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1739",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1740",
+                    "MACHNO": "MD-16",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1853",
+                    "MTYPE_CLASS": "H-Manual Dispenser"
+                },
+                {
+                    "ID": "1915",
+                    "MACHNO": "MDA-010",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1616",
+                    "MTYPE_CLASS": "H-MDA"
+                },
+                {
+                    "ID": "1912",
+                    "MACHNO": "MDA-011",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1614",
+                    "MTYPE_CLASS": "H-MDA"
+                },
+                {
+                    "ID": "1914",
+                    "MACHNO": "MDA-012",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1615",
+                    "MTYPE_CLASS": "H-MDA"
+                },
+                {
+                    "ID": "2183",
+                    "MACHNO": "OL-01",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2671",
+                    "MTYPE_CLASS": "Service Only"
+                },
+                {
+                    "ID": "1938",
+                    "MACHNO": "OV-004",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1716",
+                    "MTYPE_CLASS": "H-F\/Oven"
+                },
+                {
+                    "ID": "1997",
+                    "MACHNO": "OV-031",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1788",
+                    "MTYPE_CLASS": "P-E\/OVEN"
+                },
+                {
+                    "ID": "2107",
+                    "MACHNO": "OV-21",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2171",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "1517",
+                    "MACHNO": "PINK VADU100",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2425",
+                    "MTYPE_CLASS": "P-F\/OVEN"
+                },
+                {
+                    "ID": "1567",
+                    "MACHNO": "TDA-001",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1324",
+                    "MTYPE_CLASS": "H-TDA"
+                },
+                {
+                    "ID": "1503",
+                    "MACHNO": "TDA-M1",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1319",
+                    "MTYPE_CLASS": "H-TDA"
+                },
+                {
+                    "ID": "1505",
+                    "MACHNO": "TDA-M2",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1320",
+                    "MTYPE_CLASS": "H-TDA"
+                },
+                {
+                    "ID": "1506",
+                    "MACHNO": "TDA-M3",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1321",
+                    "MTYPE_CLASS": "H-TDA"
+                },
+                {
+                    "ID": "1507",
+                    "MACHNO": "TDA-M4",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1322",
+                    "MTYPE_CLASS": "H-TDA"
+                },
+                {
+                    "ID": "1995",
+                    "MACHNO": "VAC\/OV-01",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2197",
+                    "MTYPE_CLASS": "P-E\/OVEN"
+                },
+                {
+                    "ID": "1996",
+                    "MACHNO": "VAC\/OV-02",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2198",
+                    "MTYPE_CLASS": "P-E\/OVEN"
+                },
+                {
+                    "ID": "1571",
+                    "MACHNO": "VLFH-001",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1398",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1574",
+                    "MACHNO": "VLFH-008",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1403",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "2103",
+                    "MACHNO": "VLFH-009",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1404",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1868",
+                    "MACHNO": "VLFH-015",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1446",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1580",
+                    "MACHNO": "VLFH-025",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1412",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1583",
+                    "MACHNO": "VLFH-026",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1413",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1870",
+                    "MACHNO": "VLFH-032",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1447",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1586",
+                    "MACHNO": "VLFH-034",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1415",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1589",
+                    "MACHNO": "VLFH-053",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1426",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1592",
+                    "MACHNO": "VLFH-059",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1430",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1595",
+                    "MACHNO": "VLFH-062",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1433",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1598",
+                    "MACHNO": "VLFH-063",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1434",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1601",
+                    "MACHNO": "VLFH-064",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1435",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1604",
+                    "MACHNO": "VLFH-073",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1438",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1836",
+                    "MACHNO": "VLFH-074",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1439",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1839",
+                    "MACHNO": "VLFH-076",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1440",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1842",
+                    "MACHNO": "VLFH-078",
+                    "OPERATION": "1",
+                    "MACH201_ID": "1442",
+                    "MTYPE_CLASS": "H-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1872",
+                    "MACHNO": "VLFH-096",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2335",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1876",
+                    "MACHNO": "VLFH-097",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2338",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1874",
+                    "MACHNO": "VLFH-098",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2336",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1864",
+                    "MACHNO": "VLFH-100",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2343",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1878",
+                    "MACHNO": "VLFH-101",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2342",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
+                },
+                {
+                    "ID": "1866",
+                    "MACHNO": "VLFH-102",
+                    "OPERATION": "1",
+                    "MACH201_ID": "2361",
+                    "MTYPE_CLASS": "P-L. FLOWHOOD"
                 }
             ]
         }

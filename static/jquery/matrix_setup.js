@@ -13,11 +13,11 @@ $('document').ready(function () {
         var allPages = resultDatatable.cells().nodes();
         $(allPages).find('.checkBox').prop('checked', this.checked);
 
-        // if ($(this).is(':checked')) {
-        //     $('#matrix_setup_tbl_idTbody').find('.checkBox').prop('checked', true);
-        // } else {
-        //     $('#matrix_setup_tbl_idTbody').prop('checked', false);
-        // }
+
+
+
+
+
     });
 })
 
@@ -159,8 +159,8 @@ function dataValues() {
     var clientID = [];
 
     $('#matrix_setup_tbl_idTbody input[type="checkbox"]').each(function () {
-        var sessionID = $(this).closest('tr').find('td:eq(3)').text(); // Update index to match the correct column
-        var clientId = $(this).closest('tr').find('td:eq(1)').text(); // Update index to match the correct column
+        var sessionID = $(this).closest('tr').find('td:eq(3)').text();
+        var clientId = $(this).closest('tr').find('td:eq(1)').text();
         console.log("🚀 ~ file: matrix_setup.js:162 ~ clientID:", clientID)
         console.log("🚀 ~ file: matrix_setup.js:171 ~ sessionID:", sessionID)
         checkedSessionIDs.push(sessionID);

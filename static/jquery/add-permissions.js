@@ -19,7 +19,7 @@ function ajaxRequest(url, data) {
         method: 'POST',
         data: data,
         contentType: false,
-        processData: false, // Correct option name
+        processData: false, 
         beforeSend: function () {
             $('#user-emp-id').val()
             $('#firstname').val()

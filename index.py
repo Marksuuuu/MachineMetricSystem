@@ -12,7 +12,7 @@ from psycopg2 import Error
 app = Flask(__name__)
 app.secret_key = 'marksuuuu'
 socketio = SocketIO(app)
-# Database configuration
+
 db_config = {
     'host': 'localhost',
     'port': '5432',
@@ -54,13 +54,11 @@ def load_user(user_id):
     return User(user_id, firstname, lastname, username, fullname, employee_department, photo_url)
 
 
-# ROUTE WITH FUNCTIONS
-
 @app.route('/showAll', methods=['POST'])
 def showAll():
     port = request.form['controllerIp']
     print(f"==>> port: {port}")
-    # Using a context manager for the connection and cursor
+
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
@@ -83,7 +81,7 @@ def showAll():
                 AND ip_address = %s
             """, (port,))
             rows = cursor.fetchall()
-    # Process the results and return the JSON response
+
     result = []
     for row in rows:
         result.append({
@@ -250,12 +248,12 @@ def data_gather_view():
                 'from_client_ip': row[15],
                 'from_client_sid': row[16],
             })
-        conn.commit()  # Commit the transaction before closing the cursor
+        conn.commit()
         cursor.close()
         conn.close()
         return jsonify({'data': controllers})
     except Exception as e:
-        conn.rollback()  # Rollback the transaction in case of an error
+        conn.rollback()
         cursor.close()
         conn.close()
         print("Error executing query:", e)
@@ -287,12 +285,12 @@ def controller():
                 'time_added': row[3],
                 'session': row[4],
             })
-        conn.commit()  # Commit the transaction before closing the cursor
+        conn.commit()
         cursor.close()
         conn.close()
         return jsonify({'data': controllers})
     except Exception as e:
-        conn.rollback()  # Rollback the transaction in case of an error
+        conn.rollback()
         cursor.close()
         conn.close()
         print("Error executing query:", e)
@@ -324,12 +322,12 @@ def matrixControllers():
                 'time_added': row[3],
                 'session': row[4],
             })
-        conn.commit()  # Commit the transaction before closing the cursor
+        conn.commit()
         cursor.close()
         conn.close()
         return jsonify({'data': controllers})
     except Exception as e:
-        conn.rollback()  # Rollback the transaction in case of an error
+        conn.rollback()
         cursor.close()
         conn.close()
         print("Error executing query:", e)
@@ -345,8 +343,15 @@ def matrixData():
             SELECT 
                 id, 
                 area, 
+                matrix1, 
+                matrix2, 
+                matrix3, 
+                matrix4, 
+                matrix5, 
+                matrix6, 
+                group_name,
                 time_added, 
-                group_name
+                time_update
 	        FROM 
                 public.matrix_maintenance_tbl;
         """)
@@ -356,15 +361,22 @@ def matrixData():
             controllers.append({
                 'id': row[0],
                 'area': row[1],
-                'time_added': row[2],
-                'group_name': row[3]
+                'matrix1': row[2],
+                'matrix2': row[3],
+                'matrix3': row[4],
+                'matrix4': row[5],
+                'matrix5': row[6],
+                'matrix6': row[7],
+                'group_name': row[8],
+                'time_added': row[9],
+                'time_update': row[10]
             })
-        conn.commit()  # Commit the transaction before closing the cursor
+        conn.commit()
         cursor.close()
         conn.close()
         return jsonify({'data': controllers})
     except Exception as e:
-        conn.rollback()  # Rollback the transaction in case of an error
+        conn.rollback()
         cursor.close()
         conn.close()
         print("Error executing query:", e)
@@ -398,12 +410,12 @@ def matrixSelect():
                 'text': row[1],
 
             })
-        conn.commit()  # Commit the transaction before closing the cursor
+        conn.commit()
         cursor.close()
         conn.close()
         return jsonify({'data': controllers})
     except Exception as e:
-        conn.rollback()  # Rollback the transaction in case of an error
+        conn.rollback()
         cursor.close()
         conn.close()
         print("Error executing query:", e)
@@ -458,19 +470,20 @@ def sync_request_ajax():
                 'matrix6': row[5]
             })
         print(f"==>> matrix: {matrix}")
-        
+
         with open('cmms-dummy-data.json', 'r') as json_file:
             json_data = json.load(json_file)
 
         if grp_name in json_data['data']['optgrp_name']:
             matching_entries = json_data['data']['optgrp_name'][grp_name]
-            
+
             conn = psycopg2.connect(**db_config)
             cursor = conn.cursor()
 
             query = "SELECT session, machine_setup FROM public.connected_clients_data_tbl WHERE machine_setup = ANY(%s)"
 
-            mach201_ids = [entry.get('MACH201_ID') for entry in matching_entries]
+            mach201_ids = [entry.get('MACH201_ID')
+                           for entry in matching_entries]
 
             cursor.execute(query, (mach201_ids,))
             query_results = cursor.fetchall()
@@ -482,107 +495,6 @@ def sync_request_ajax():
         return jsonify({'data': result_data, 'matrix': matrix})
     except Exception as e:
         return jsonify({'error': str(e)})
-    
-
-# @app.route('/SyncRequestAjax', methods=['POST'])
-# def sync_request_ajax():
-#     try:
-#         grp_name = request.form['grp_name']
-
-#         with open('cmms-dummy-data.json', 'r') as json_file:
-#             json_data = json.load(json_file)
-
-#         if grp_name in json_data['data']['optgrp_name']:
-#             matching_entries = json_data['data']['optgrp_name'][grp_name]
-#             filtered_data = []
-
-#             conn = psycopg2.connect(**db_config)
-#             cursor = conn.cursor()
-#             cursor.execute("""SELECT machine_setup FROM public.connected_clients_data_tbl""")
-#             rows = cursor.fetchall()
-#             search_value = 0
-#             for row in rows:
-#                 search_value = row[0]
-#                 print(f"==>> search_value: {search_value}")
-#                 search_criteria = 'MACH201_ID'
-#                 for entry in matching_entries:
-#                     if entry.get(search_criteria) == search_value:
-#                         filtered_data.append(entry)
-
-#             data_result = filtered_data
-#             print(f"==>> data_result: {data_result}")
-            
-#             # Extract MACH201_ID values from data_result
-#             mach201_ids = [entry.get('MACH201_ID') for entry in data_result]
-#             mach201_ids_str = ','.join(str(id) for id in mach201_ids)  # Convert to string
-#             resultHere = f"""SELECT session, machine_setup FROM public.connected_clients_data_tbl where machine_setup IN ({mach201_ids_str})"""
-            
-#             # Execute the query and fetch results
-#             cursor.execute(resultHere)
-#             print(f"==>> resultHere: {resultHere}")
-#             query_results = cursor.fetchall()
-#             print(f"==>> query_results: {query_results}")
-
-#             # Convert query_results to a list of dictionaries
-#             result_data = [{'session': row[0], 'machine_setup': row[1]} for row in query_results]
-#         else:
-#             result_data = []
-
-#         return jsonify({'data': result_data})
-#     except Exception as e:
-#         return jsonify({'error': str(e)})
-
-
-# @app.route('/SyncRequestAjax', methods=['POST'])
-# def SyncRequestAjax():
-#     grp_name = request.form['grp_name']
-
-#     with open('cmms-dummy-data.json', 'r') as json_file:
-#         json_data = json.load(json_file)
-
-#         if grp_name in json_data['data']['optgrp_name']:
-#             matching_entries = json_data['data']['optgrp_name'][grp_name]
-#             dataResult = matching_entries
-#             print(f"==>> dataResult: {dataResult}")
-#         else:
-#             dataResult = []
-
-#         return jsonify({'data': dataResult})
-
-
-# Function to search for optgrp_names
-# def search_wirebond(data):
-#     wirebond_data = data["data"]["Wirebond"]
-#     optgrp_names = [item["optgrp_name"] for item in wirebond_data]
-#     return optgrp_names
-    # api_area = f"http://testapps.teamglac.com/pl_dashboard/api/api_area.php?area_name={data}"
-    # response = requests.get(api_area)
-    # data_list = json.loads(response.text)['result']
-
-    # if not data_list:
-    #     res = 'nodata'
-    #     return jsonify({'data': res})
-    # else:
-    #     results = []
-
-    #     for data_item in data_list:
-    #         id = data_item['optgrp_id']
-    #         text = data_item['optgrp_name']
-    #         # result = getAnotherApiData(id)
-    #         results.append(result)
-
-    # return jsonify(results)
-
-# def getAnotherApiData(id):
-#     api_assigned_pt = f"http://testapps.teamglac.com/pl_dashboard/api/machine_optgrp.php?optgrp_id={int(id)}"
-#     response_api = requests.get(api_assigned_pt)
-
-#     if response_api.status_code == 200:
-#         data_list_api = json.loads(response_api.text)['result']
-#         print(f"==>> data_list_api: {data_list_api}")
-#         return data_list_api
-
-#     return []
 
 
 @app.route('/clientSelect')
@@ -606,12 +518,12 @@ def clientSelect():
                 'text': row[1] + " " + '(' + row[2] + ')',
 
             })
-        conn.commit()  # Commit the transaction before closing the cursor
+        conn.commit()
         cursor.close()
         conn.close()
         return jsonify(controllers)
     except Exception as e:
-        conn.rollback()  # Rollback the transaction in case of an error
+        conn.rollback()
         cursor.close()
         conn.close()
         print("Error executing query:", e)
@@ -630,26 +542,30 @@ def getMachinesNamesApi():
 def updateClientData():
     id = request.form['id']
     sessionID = request.form['sessionID']
+    machno = request.form['machno']
+    print(f"==>> machno: {machno}")
     print(f"==>> id: {id}")
     selectedArea = request.form['selectedArea']
     selectedMachineName = request.form['selectedMachineName']
 
     hris = f'http://devapps.teamglac.com/paperless_pt_test/api/api_assigned_pt.php?mach_201={int(selectedMachineName)}'
     response = requests.get(hris)
-    data_list = json.loads(response.text)['data']  # Assuming data is a list
+    data_list = json.loads(response.text)['data']
 
     if not data_list:
         res = 'nodata'
+        data = {
+            'res': res,
+        }
         return jsonify({'data': res, 'sessionID': sessionID})
     else:
-        # Assuming data_list contains dictionaries, iterate over them
+
         results = []
         for data in data_list:
             main_opt = data['main_opt']
             sub_opt = data['sub_opt']
             wip_entity_name = data['wip_entity_name']
 
-            # Update client data in the database
             with psycopg2.connect(**db_config) as conn:
                 with conn.cursor() as cur:
                     cur.execute("""
@@ -666,7 +582,7 @@ def updateClientData():
                 'sub_opt': sub_opt,
             }
             results.append(result)
-        return jsonify({'data': results, 'sessionID': sessionID})
+        return jsonify({'data': results, 'machno': machno, 'sessionID': sessionID})
 
 
 @app.route('/deleteController', methods=['POST'])
@@ -728,7 +644,7 @@ def matrixInput():
                     """
                     UPDATE public.connected_clients_data_tbl SET matrix_maintenance_id = %s, date_updated = %s
                     WHERE id = %s""", (selectID, dateAdded, clientID))
-                conn.commit()  # commit the transaction
+                conn.commit()
 
                 cur.execute(
                     "SELECT id, matrix1, matrix2, matrix3, matrix4, matrix5, matrix6 FROM public.matrix_maintenance_tbl WHERE id = %s",
@@ -747,12 +663,7 @@ def matrixInput():
                         'MATRIX6': row[6]
                     })
 
-                # Close the cursor after fetching data but before closing the connection
                 conn.commit()
-            #     cur.close()
-
-            # # Close the connection after all database operations are done
-            # conn.close()
 
             return jsonify({'data': resultMatrix, 'sessionID': sessionID})
 
@@ -760,6 +671,41 @@ def matrixInput():
         msg = f"ERROR: {e}"
 
     return msg
+
+
+@app.route('/updateMatrix', methods=['POST'])
+def updateMatrix():
+    id = request.form['id']
+    print(f"==>> id: {id}")
+    area = request.form['defaultSelect']
+    groupSelect = request.form['groupSelect']
+    matrix1 = request.form['matrix1']
+    matrix2 = request.form['matrix2']
+    matrix3 = request.form['matrix3']
+    matrix4 = request.form['matrix4']
+    matrix5 = request.form['matrix5']
+    matrix6 = request.form['matrix6']
+    dateAdded = str(datetime.now())
+    msg = "UPDATE SUCCESS"
+
+    try:
+        with psycopg2.connect(**db_config) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    UPDATE public.matrix_maintenance_tbl
+                    SET area=%s, matrix1=%s, matrix2=%s, matrix3=%s, matrix4=%s, matrix5=%s, matrix6=%s, group_name=%s, time_update=%s
+                    WHERE id=%s;
+                    """,
+                    (area, matrix1, matrix2, matrix3, matrix4,
+                     matrix5, matrix6, groupSelect, dateAdded, id)
+                )
+
+                conn.commit()
+                return jsonify({'data': msg})
+    except Error as e:
+        msg = f"ERROR: {e}"
+        return jsonify({'error': msg})
 
 
 @app.route('/matrixMaintenanceInputs', methods=['POST'])
@@ -785,11 +731,11 @@ def matrixMaintenanceInputs():
                     (area, dateAdded, matrix1, matrix2,
                      matrix3, matrix4, matrix5, matrix6, groupSelect)
                 )
-                conn.commit()  # commit the transaction
+                conn.commit()
     except Error as e:
         msg = f"ERROR: {e}"
 
-    return msg  # Return the result message
+    return msg
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -823,7 +769,6 @@ def login():
                 user = User(user_id, user_data['firstname'], user_data['lastname'], user_data['username'],
                             user_data['fullname'], user_data['employee_department'], user_data['photo_url'])
 
-                # Login the user
                 login_user(user)
 
                 if photo_url == False or photo_url is None:
@@ -835,14 +780,9 @@ def login():
         return jsonify({'data': data})
 
     else:
-        # Display the login form
+
         return render_template('login.html')
 
-
-# TRIGGER
-
-
-# SOCKETIO-RESPONSE-FUNCTION
 
 def saveDatabaseClient(data):
     print(f"==>> data: {data}")
@@ -854,7 +794,7 @@ def saveDatabaseClient(data):
     session = request.sid
     print(f"==>> session: {session}")
     print(session)
-    # print(f"==>> session: {session}")
+
     msg = ""
     try:
         with psycopg2.connect(**db_config) as conn:
@@ -864,8 +804,8 @@ def saveDatabaseClient(data):
                     (ipAddress,)
                 )
                 count = cur.fetchone()[0]
-                # print(f"==>> count: {count}")
-                if count > 0:  # Record exists, perform an update
+
+                if count > 0:
                     status = 'CONNECTED'
                     cur.execute(
                         """
@@ -877,15 +817,15 @@ def saveDatabaseClient(data):
                     )
                     msg = "UPDATE SUCCESS"
                     conn.commit()
-                    # print('go here')
-                else:  # Record doesn't exist, perform an insert
+
+                else:
                     status = 'CONNECTED'
                     cur.execute(
                         "INSERT INTO public.connected_clients_data_tbl(ip_address, session, port_name, time_added, status) VALUES (%s, %s, %s, %s, %s)",
                         (ipAddress, session, machineNameNoPy, dateAdded, status)
                     )
                     msg = "INSERT SUCCESS"
-                    conn.commit()  # commit the transaction
+                    conn.commit()
     except Error as e:
         msg = f"ERROR: {e}"
 
@@ -905,7 +845,7 @@ def saveDatabaseDisconnect(data):
                 (ipAddress,)
             )
             count = cur.fetchone()[0]
-            if count > 0:  # Record exists, perform an update
+            if count > 0:
                 cur.execute(
                     """
                     UPDATE public.connected_clients_data_tbl
@@ -915,7 +855,7 @@ def saveDatabaseDisconnect(data):
                     (session, dateAdded, session, ipAddress)
                 )
                 msg = "UPDATE SUCCESS"
-            else:  # Record doesn't exist, perform an insert
+            else:
                 cur.execute(
                     """
                     INSERT INTO public.controller_tbl (ip_address, time_added, session)
@@ -925,7 +865,7 @@ def saveDatabaseDisconnect(data):
                 )
                 msg = "INSERT SUCCESS"
 
-            conn.commit()  # commit the transaction
+            conn.commit()
 
     return msg
 
@@ -948,7 +888,7 @@ def saveDatabaseController(data):
                 (ipAddress,)
             )
             count = cur.fetchone()[0]
-            if count > 0:  # Record exists, perform an update
+            if count > 0:
                 cur.execute(
                     """
                     UPDATE public.controller_tbl
@@ -958,7 +898,7 @@ def saveDatabaseController(data):
                     (dateAdded, session, ipAddress)
                 )
                 msg = "UPDATE SUCCESS"
-            else:  # Record doesn't exist, perform an insert
+            else:
                 cur.execute(
                     """
                     INSERT INTO public.controller_tbl (ip_address, time_added, session)
@@ -968,7 +908,7 @@ def saveDatabaseController(data):
                 )
                 msg = "INSERT SUCCESS"
 
-            conn.commit()  # commit the transaction
+            conn.commit()
 
     return msg
 
@@ -999,7 +939,7 @@ def getData():
         conn.close()
         return controllers
     except Exception as e:
-        # print("Error executing query:", e)
+
         return None
 
 
@@ -1013,8 +953,6 @@ def connect():
     else:
         socketio.emit(
             'details', {'error': 'An error occurred while fetching controllers.'})
-
-## SOCKET-IO##
 
 
 @socketio.on('disconnect')
@@ -1046,33 +984,34 @@ def handle_client(data):
 def handle_matrix_data(data):
     session_ids = data['sessionID']
     matrix_values = data['matrix']
-    
+
     for session_id in session_ids:
         print(f"Session ID: {session_id}")
-    
+
     for matrix_item in matrix_values:
         for value in matrix_item:
             print(f"Matrix Value: {value}")
-    
-    # Emit the entire matrix_values array back to each client
-    for session_id in session_ids:
-        socketio.emit('getMatrixfromServer', {'dataToPass': matrix_values}, to=session_id)
 
+    for session_id in session_ids:
+        socketio.emit('getMatrixfromServer', {
+                      'dataToPass': matrix_values}, to=session_id)
 
 
 @socketio.on('sendDataToClient')
 def handle_custom_event(data):
     print(f"==>> data: {data}")
     sid = data['sessionID']
+    machno = data['machno']
     print(f"==>> sid: {sid}")
     dataValue = data['dataToPass']
     print(f"==>> dataValue: {dataValue}")
-    socketio.emit('my_message', {'dataToPass': dataValue}, to=sid)
+    socketio.emit(
+        'my_message', {'dataToPass': dataValue, 'machno': machno}, to=sid)
 
 
 @socketio.on('data')
 def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
-    # print(f"==>> data: {data}")
+
     try:
         with psycopg2.connect(**db_config) as conn:
             cur = conn.cursor()
@@ -1117,8 +1056,6 @@ def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
         return jsonify(error_message)
 
 
-## ROUTES - AREA / DASHBOARD##
-
 @app.route('/area-wirebond')
 def area_wirebond():
     return render_template('area-wirebond.html')
@@ -1129,7 +1066,6 @@ def area_end_of_line_1():
     return render_template('area-end-of-line-1.html')
 
 
-# ROUTES
 @app.route('/logout')
 @login_required
 def logout():
@@ -1186,5 +1122,5 @@ def index():
 
 
 if __name__ == '__main__':
-    # app.run(host='10.0.2.150', port=8001, debug=True)
+
     socketio.run(app, host='10.0.2.150', port=9090, debug=True)

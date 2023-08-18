@@ -30,15 +30,15 @@
                     <li class="nav-item">
                       <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-home" aria-controls="navs-top-home" aria-selected="true">Matrix Assign</button>
                     </li>
-                    <li class="nav-item">
+                    <!--    <li class="nav-item">
                       <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-profile" aria-controls="navs-top-profile" aria-selected="false">Matrix Inputs</button>
                     </li>
                     <li class="nav-item">
                       <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-messages" aria-controls="navs-top-messages" aria-selected="false">Messages</button>
-                    </li>
+                    </li>    -->
                   </ul>
                   <div class="tab-content">
-                 <!--     <div class="tab-pane fade active show" id="navs-top-home" role="tabpanel">
+                    <!--          <div class="tab-pane fade active show" id="navs-top-home" role="tabpanel">
                       <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Matrix Assign</span></h4>
                       <div class="card">
                         <div class="card-datatable text-nowrap">
@@ -61,8 +61,8 @@
                           </div>
                         </div>
                       </div>
-                    </div> -->
-                    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Matrix Input</span></h4>
+                    </div>      -->
+                    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Matrix Assign</span></h4>
                     <button type="button" class="btn btn-primary float-right mb-5" id="matrixInputBtn">ADD MATRIX</button>
                     <div class="card">
                       <div class="card-datatable text-nowrap">
@@ -73,8 +73,15 @@
                                 <tr>
                                   <th class="sorting sorting_asc" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="" aria-sort="ascending">ID</th>
                                   <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">AREA</th>
-                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">matrix1</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">matrix2</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">matrix3</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">matrix4</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">matrix5</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">matrix6</th>
                                   <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">GROUP NAME</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">TIME ADDED</th>
+                                  <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">TIME UPDATE</th>
                                   <th class="sorting" tabindex="0" aria-controls="matrix_setup_tbl" rowspan="1" colspan="1" aria-label="">ACTIONS</th>
                                 </tr>
                               </thead>
@@ -95,10 +102,81 @@
               <!-- modal -->
 
               <div class="modal fade" id="matrixInputModal" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div id="matrixModalWaitme">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Insert Matrix</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="col-xxl">
+                          <form>
+                            <div class="row mb-3">
+                              <label for="defaultSelect" class="col-sm-2 col-form-label">Area</label>
+                              <div class="col-sm-10">
+                                <select id="areaSelect" class="form-select"></select>
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label for="groupSelect" class="col-sm-2 col-form-label">Group</label>
+                              <div class="col-sm-10">
+                                <select id="putangInangSelect" class="form-select"></select>
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="basic-default-matrix1" placeholder="ACME Inc." />
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="basic-default-matrix2" placeholder="ACME Inc." />
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="basic-default-matrix3" placeholder="ACME Inc." />
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="basic-default-matrix4" placeholder="ACME Inc." />
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="basic-default-matrix5" placeholder="ACME Inc." />
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-sm-2 col-form-label" for="basic-default-matrix">matrix</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="basic-default-matrix6" placeholder="ACME Inc." />
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveInputtedMatrix">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" id="matrixUpdateModal" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel3">Modal title</h5>
+                      <h5 class="modal-title" id="modalData" data-id="">Update Matrix</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -108,7 +186,6 @@
                             <label for="defaultSelect" class="col-sm-2 col-form-label">Area</label>
                             <div class="col-sm-10">
                               <select id="areaSelect" class="form-select"></select>
-                            
                             </div>
                           </div>
                           <div class="row mb-3">
@@ -158,12 +235,11 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary" id="saveInputtedMatrix">Save changes</button>
+                      <button type="button" class="btn btn-primary" id="saveUpdateMatrix">Save changes</button>
                     </div>
                   </div>
                 </div>
               </div>
-
               <!-- / Content -->
             </div>
             <div class="modal fade" id="matrixShowModal" tabindex="-1" aria-hidden="true" modal-id="" modal-name="">
