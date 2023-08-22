@@ -256,13 +256,12 @@ function matrixDatatable() {
     matrix_tbl.on('click', '.delete-btn', function () {
         var id = $(this).attr('data-id')
         deleteMatrix(id)
+
+        matrixInputAjaxRequest('/delete')
     })
 
 
 
-}
-function deleteMatrix(id) {
-    console.log("🚀 ~ file: matrix_input.js:201 ~ deleteMatrix ~ id:", id)
 }
 
 function updateMatrix() {

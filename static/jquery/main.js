@@ -196,19 +196,28 @@ function successResponse(response) {
     $('#dataTableVar').DataTable().destroy()
     var dataResult = response.data;
     dataResult.forEach(function (row) {
+        var status = row.STATUS
+        var bgBadgeColor = (status == 'CONNECTED') ? 'primary' : 'danger';
+
+        var btnStatus
+
+        btnStatus = (status == 'CONNECTED')
+            ? '<button type="button" class="btn btn-outline-success bx bx-edit edit-btn" data-id="' + row.ID + '"></button>' +
+            '<button type="button" class="btn btn-outline-info bx bxs-cloud-download request-file-btn" data-id="' + row.ID + '" data-session="' + row.SESSION + '"></button>' +
+            '<button type="button" class="btn btn-outline-danger bx bx-trash" data-id="' + row.ID + '"></button>'
+            : '<button type="button" class="btn btn-outline-danger bx bx-trash" data-id="' + row.ID + '"></button>';
+
+
         var newRow = '<tr>' +
             '<td>' + row.ID + '</td>' +
-            '<td>' + row.IP + '</td>' +
-            '<td>' + row.SESSION + '</td>' +
-            '<td>' + row.PORT + '</td>' +
-            '<td>' + row.MACHINE_SETUP + '</td>' +
-            '<td>' + row.TIME_ADDED + '</td>' +
-            '<td><span class="badge bg-primary">' + row.STATUS + '</span></td>' +
-            '<td><div class="btn-group" role="group" aria-label="Basic radio toggle button group">' +
-            '<button type="button" class="btn btn-outline-primary bx bx-list-ol" data-id="' + row.ID + '"></button>' +
-            '<button type="button" class="btn btn-outline-success bx bx-edit edit-btn" data-id="' + row.ID + '"></button>' +
-            '<button type="button" class="btn btn-outline-danger bx bx-trash" data-id="' + row.ID + '"></button>' +
-            '</div>' +
+            '<td><span class="badge bg-' + bgBadgeColor + '">' + row.IP + '</span></td>' +
+            '<td><span class="badge bg-' + bgBadgeColor + '">' + row.SESSION + '</span></td>' +
+            '<td><span class="badge bg-' + bgBadgeColor + '">' + row.PORT + '</span></td>' +
+            '<td><span class="badge bg-' + bgBadgeColor + '">' + row.MACHINE_SETUP + '</span></td>' +
+            '<td><span class="badge bg-' + bgBadgeColor + '">' + row.TIME_ADDED + '</span></td>' +
+            '<td><span class="badge bg-' + bgBadgeColor + '">' + row.STATUS + '</span></td>' +
+            '<td><div class="btn-group" role="group" aria-label="Basic radio toggle button group">'
+            + btnStatus + '</div>' +
             '</td>' +
             '</tr>';
         $('#dataTableVarTbody').append(newRow);
@@ -219,6 +228,12 @@ function successResponse(response) {
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
         order: [[3, 'desc']]
     });
+
+    $('.request-file-btn').click(function () {
+        $('#askForFileModal').modal('toggle')
+
+        console.log('test')
+    })
 
     $('.edit-btn').click(function () {
         var rowId = $(this).data('id');
@@ -267,6 +282,8 @@ function successResponse(response) {
 
 
         });
+
+
 
     });
 

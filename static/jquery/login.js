@@ -26,8 +26,7 @@ function ajaxLogin(url, data) {
       } else if (data.data == 2) {
         showNotification('warning', 'Employee Details not Found, please check');
       } else {
-        showNotification('success', 'Logging in');
-        window.location.href = data.data;
+        showNotification('success', 'Logging in', data);
       }
     },
     error: function (xhr, textStatus, errorThrown) {
@@ -38,12 +37,12 @@ function ajaxLogin(url, data) {
   });
 }
 
-function showNotification(icon, title) {
+function showNotification(icon, title, data) {
   const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
-    timer: 3000,
+    timer: 1500,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -54,5 +53,9 @@ function showNotification(icon, title) {
   Toast.fire({
     icon: icon,
     title: title,
+  }).then(function () {
+    window.location.href = data.data;
+
   });
+
 }

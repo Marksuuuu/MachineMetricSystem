@@ -838,6 +838,7 @@ def saveDatabaseDisconnect(data):
     machineName = data['machine_name']
     machineNameNoPy = re.sub('.py', '', machineName)
     session = request.sid
+    status = 'DISCONNECTED'
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -850,9 +851,9 @@ def saveDatabaseDisconnect(data):
                     """
                     UPDATE public.connected_clients_data_tbl
 	                SET  session= %s, time_added= %s, status= %s
-	                WHERE ip_address= %s ;
+	                WHERE ip_address= %s;
                     """,
-                    (session, dateAdded, session, ipAddress)
+                    (session, dateAdded,status , ipAddress)
                 )
                 msg = "UPDATE SUCCESS"
             else:
@@ -871,7 +872,40 @@ def saveDatabaseDisconnect(data):
 
 
 def handleDisconnect():
-    print('disconnect')
+    ipAddress = request.remote_addr
+    dateAdded = str(datetime.now())
+    session = request.sid
+    status = 'DISCONNECTED'
+    with psycopg2.connect(**db_config) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT COUNT(*) FROM public.connected_clients_data_tbl WHERE ip_address = %s",
+                (ipAddress,)
+            )
+            count = cur.fetchone()[0]
+            if count > 0:
+                cur.execute(
+                    """
+                    UPDATE public.connected_clients_data_tbl
+	                SET  session= %s, time_added= %s, status= %s
+	                WHERE ip_address= %s ;
+                    """,
+                    (session, dateAdded, status, ipAddress)
+                )
+                msg = "UPDATE SUCCESS"
+            else:
+                cur.execute(
+                    """
+                    INSERT INTO public.controller_tbl (ip_address, time_added, session)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (ipAddress, dateAdded, session)
+                )
+                msg = "INSERT SUCCESS"
+
+            conn.commit()
+
+    return msg
 
 
 def saveDatabaseController(data):
