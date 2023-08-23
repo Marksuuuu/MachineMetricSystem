@@ -167,6 +167,7 @@ function makeAjaxRequestShow(url, data) {
             $('#dataTableVarTbody').html('')
         },
         success: function (response) {
+            console.log("🚀 ~ file: main.js:170 ~ makeAjaxRequestShow ~ response:", response)
             successResponse(response)
 
         },

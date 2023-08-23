@@ -23,6 +23,7 @@ db_config = {
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+connected_clients = []
 
 
 class User(UserMixin):
@@ -563,8 +564,12 @@ def updateClientData():
         results = []
         for data in data_list:
             main_opt = data['main_opt']
-            sub_opt = data['sub_opt']
             wip_entity_name = data['wip_entity_name']
+            package = data['package']
+            running_qty = data['running_qty']
+            device = data['device']
+            customer = data['customer']
+            uph = data['uph']
 
             with psycopg2.connect(**db_config) as conn:
                 with conn.cursor() as cur:
@@ -579,7 +584,11 @@ def updateClientData():
             result = {
                 'main_opt': main_opt,
                 'wip_entity_name': wip_entity_name,
-                'sub_opt': sub_opt,
+                'package': package,
+                'running_qty': running_qty,
+                'device': device,
+                'customer': customer,
+                'uph': uph,
             }
             results.append(result)
         return jsonify({'data': results, 'machno': machno, 'sessionID': sessionID})
@@ -947,46 +956,9 @@ def saveDatabaseController(data):
     return msg
 
 
-def getData():
-    try:
-        conn = psycopg2.connect(**db_config)
-        cursor = conn.cursor()
-        cursor.execute("""
-                SELECT
-                    id as ID,
-                    ip_address as IP,
-                    session as SESSION,
-                    status as STATUS
-                FROM
-                    public.connected_clients_data_tbl
-        """)
-        rows = cursor.fetchall()
-        controllers = []
-        for row in rows:
-            controllers.append({
-                'ID': row[0],
-                'IP': row[1],
-                'SESSION': row[2],
-                'STATUS': row[3],
-            })
-        cursor.close()
-        conn.close()
-        return controllers
-    except Exception as e:
-
-        return None
-
-
 @socketio.on('connect')
 def connect():
     client_sid = request.sid
-    data = getData()
-    print(client_sid)
-    if data is not None:
-        socketio.emit('details',  data)
-    else:
-        socketio.emit(
-            'details', {'error': 'An error occurred while fetching controllers.'})
 
 
 @socketio.on('disconnect')
@@ -1090,9 +1062,9 @@ def handle_data(data, stat_var, uID, result, get_start_date, remove_py):
         return jsonify(error_message)
 
 
-@app.route('/area-wirebond')
-def area_wirebond():
-    return render_template('area-wirebond.html')
+@app.route('/dashboard-status')
+def dashboard_status():
+    return render_template('dashboard-status.html')
 
 
 @app.route('/area-end-of-line-1')
