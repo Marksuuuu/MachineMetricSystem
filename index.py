@@ -24,7 +24,7 @@ db_config = {
 login_manager = LoginManager()
 login_manager.init_app(app)
 connected_clients = []
-
+sessions = {}
 
 class User(UserMixin):
     def __init__(self, id, firstname, lastname, username, fullname, employee_department, photo_url):
@@ -549,7 +549,7 @@ def updateClientData():
     selectedArea = request.form['selectedArea']
     selectedMachineName = request.form['selectedMachineName']
 
-    hris = f'http://devapps.teamglac.com/paperless_pt_test/api/api_assigned_pt.php?mach_201={int(selectedMachineName)}'
+    hris = f'http://prodapps.teamglac.com/paperless_pt_v2/api/api_assigned_pt.php?mach_201={int(selectedMachineName)}'
     response = requests.get(hris)
     data_list = json.loads(response.text)['data']
 
@@ -564,7 +564,9 @@ def updateClientData():
         results = []
         for data in data_list:
             main_opt = data['main_opt']
+            operation_seq_number = data['operation_seq_num']
             wip_entity_name = data['wip_entity_name']
+            wip_entity_id = data['wip_entity_id']
             package = data['package']
             running_qty = data['running_qty']
             device = data['device']
@@ -584,6 +586,8 @@ def updateClientData():
             result = {
                 'main_opt': main_opt,
                 'wip_entity_name': wip_entity_name,
+                'wip_entity_id': wip_entity_id,
+                'operation_seq_number': operation_seq_number,
                 'package': package,
                 'running_qty': running_qty,
                 'device': device,
@@ -793,16 +797,10 @@ def login():
         return render_template('login.html')
 
 
-def saveDatabaseClient(data):
-    print(f"==>> data: {data}")
+def saveDatabaseClient():
     ipAddress = request.remote_addr
     dateAdded = str(datetime.now())
-    machineName = data.get('machine_name', '')
-    print(f"==>> machineName: {machineName}")
-    machineNameNoPy = re.sub('.py', '', machineName)
     session = request.sid
-    print(f"==>> session: {session}")
-    print(session)
 
     msg = ""
     try:
@@ -822,7 +820,7 @@ def saveDatabaseClient(data):
                         SET session=%s, port_name=%s, time_added=%s, status=%s
                         WHERE ip_address=%s;
                         """,
-                        (session, machineNameNoPy, dateAdded, status, ipAddress,)
+                        (session, 'N/A', dateAdded, status, ipAddress,)
                     )
                     msg = "UPDATE SUCCESS"
                     conn.commit()
@@ -831,7 +829,7 @@ def saveDatabaseClient(data):
                     status = 'CONNECTED'
                     cur.execute(
                         "INSERT INTO public.connected_clients_data_tbl(ip_address, session, port_name, time_added, status) VALUES (%s, %s, %s, %s, %s)",
-                        (ipAddress, session, machineNameNoPy, dateAdded, status)
+                        (ipAddress, session, 'N/A', dateAdded, status)
                     )
                     msg = "INSERT SUCCESS"
                     conn.commit()
@@ -959,10 +957,13 @@ def saveDatabaseController(data):
 @socketio.on('connect')
 def connect():
     client_sid = request.sid
+    saveDatabaseClient()
+    print(f"==>> client_sid: {client_sid}")
 
 
 @socketio.on('disconnect')
 def disconnect():
+    print('dc')
     handleDisconnect()
 
 
@@ -983,8 +984,7 @@ def handle_activity(data):
 
 @socketio.on('client')
 def handle_client(data):
-    saveDatabaseClient(data)
-
+    pass
 
 @socketio.on('sendMatrixDataToClient')
 def handle_matrix_data(data):
@@ -1128,5 +1128,4 @@ def index():
 
 
 if __name__ == '__main__':
-
-    socketio.run(app, host='10.0.2.150', port=9090, debug=True)
+    socketio.run(app, host='10.0.2.150', port=8083, debug=True)
